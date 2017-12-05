@@ -1,0 +1,56 @@
+.container{
+    width: 1240px !important;
+    margin-top: 70px;
+}
+
+/* 左边导航栏 */
+.left-nav{
+    width:  110px;
+    height: 600px;
+    position: fixed;
+    margin-left: 30px;
+    font: 18px "PingFang SC","Hiragino Sans GB","Microsoft YaHei","WenQuanYi Micro Hei","Helvetica Neue",Arial,sans-serif;
+}
+span.list{
+    color:#444;
+}
+span.chose{
+    color:#fff;
+}
+
+/* 文章封面图 */
+.cover-img{
+    width: 160px;
+    height: 100px;
+}
+
+/* 文章标题、作者、时间、评论、点赞 */
+.headline{
+    word-wrap: break-word;
+    word-break: break-all;
+    width: 400px;
+    height: 80px;
+}
+.author{
+    width: 400px;
+    height: 20px;
+}
+
+/* 新闻容器 */
+.news-container{
+    padding-bottom: 50px;
+}
+
+/* 加载按钮 */
+.reload{
+    float: right;
+    font-family: "Microsoft YaHei";
+    font-weight:bold;
+    font-size: 18px;
+    color: #2aabd2;
+}
+
+.friend-link{
+    font-size: 18px;
+    color: #13777e;
+}

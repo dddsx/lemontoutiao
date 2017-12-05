@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemon213.mapper.CommentMapper">
+    <insert id="saveArticleComment" parameterType="content">
+        INSERT INTO art_comment(art_id, user_id, content, gmt_create, gmt_modified)
+        VALUES(#{artId}, #{userId}, #{content}, #{gmtCreate}, #{gmtModified})
+    </insert>
+
+    <select id="selectCommentsByArticleId" parameterType="int" resultMap="commentResultMap">
+        SELECT * FROM art_comment WHERE art_id = #{id}
+        ORDER BY gmt_create DESC
+    </select>
+
+    <resultMap id="commentResultMap" type="com.lemon213.pojo.Comment">
+        <id property="id" column="id"/>
+        <result property="content" column="content"/>
+        <result property="praiseNum" column="praise_num"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <association property="user" column="user_id" select="com.lemon213.mapper.UserMapper.selectUserById"
+                     javaType="user"/>
+    </resultMap>
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemon213.mapper.EditorMapper">
+    <insert id="saveEditor" parameterType="editor">
+        INSERT INTO editor(phone, real_name, idcard, workspace, gmt_create, gmt_modified)
+        VALUES(#{phone}, #{realName}, #{idcard}, #{workspace}, #{gmtCreate}, #{gmtModified})
+    </insert>
+
+    <select id="selectEditorById" parameterType="int" resultType="com.lemon213.pojo.Editor">
+        SELECT * FROM editor WHERE id = #{id}
+    </select>
+
+     <select id="selectLastId" resultType="int">
+        SELECT LAST_INSERT_ID() AS id
+    </select>
+
+</mapper>

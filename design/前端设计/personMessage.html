@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<title>昨日头条</title>
+<!-- 如果使用了导航条，需要移除所有导航条的折叠和展开行为。
+	   对于栅格布局，额外增加 .col-xs-* 类或替换掉 .col-md-* 和 .col-lg-*。 不要担心，针
+		对超小屏幕设备的栅格系统能够在所有分辨率的环境下展开。-->
+<link href="bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="css/newslist.css" rel="stylesheet">
+<style>
+body {
+	background-color: #f1f1f1;
+}
+dd {
+	display: block;
+}
+.container {
+	width: 1100px !important;
+	padding: 0px;
+	background-color: white;
+}
+.menuPhoto {
+	width: 35px;
+	height: 35px;
+	margin: 9px 5px; /*上下, 左右*/
+}
+.personal-property {
+	padding: 0px 40px;
+}
+.photo-container {
+	float: left;
+}
+.personal-photo {
+	width: 180px;
+	height: 180px;
+}
+.focus_num {
+	width: 90px;
+	height: 32px;
+	display: block;
+	float: left;
+	border-right: 1px solid #EDEDED;
+}
+.fans_num {
+	width: 90px;
+	height: 32px;
+	display: block;
+	float: left;
+}
+.person-info {
+	padding-top: 20px;
+	padding-left: 200px;
+}
+.person-info span {
+	color: #999;
+}
+.person-intro {
+	overflow: hidden;
+	font-size: 16px;
+	color: lightslategray;
+	border-top: 1px solid #f0f0f0;
+	padding-top: 8px;
+	margin-top: 10px;
+	line-height: 22px;
+	word-wrap: break-word;
+	word-break: break-all;
+}
+.person-medal {
+	color: dimgray;
+	font-size: 16px;
+	margin-top: 20px;
+}
+.person-medal span {
+	color: #999;
+}
+.personal-section {
+	margin-top: 1px;
+}
+.person-menu {
+	font-size: 17px;
+	width: 200px !important;
+	text-align: center;
+	color: #474747;
+}
+#message-form{
+	line-height: normal;
+    font-family: 'Microsoft YaHei';
+	font-size: 17px;
+	padding-left: 20px;
+}
+</style>
+</head>
+<body>
+
+<!-- 导航条 -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header"> <a class="navbar-brand" href="#">今天头条</a> </div>
+        <div>
+            <ul class="nav navbar-nav">
+                <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">天气<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        武汉 晴 10~23C°
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav" style="float: right">
+                <li><img src="img/touxiang.jpg" alt="???" class="img-circle menuPhoto"></li>
+                <!-- 用户下拉菜单 -->
+                <li> <a class="dropdown-toggle username" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">继续接盘李老八<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a style="color:#555555" href="#">我的收藏</a></li>
+                        <li><a style="c7olor:#555555" href="#">我的关注</a></li>
+                        <li><a style="color:#555555" href="#">我的粉丝</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a style="color:#555555" href="#">个人资料</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a style="color:#555555" href="#">退出登录</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">反馈</a></li>
+                <li><a href="#">投诉</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- 用户资料修改模态框 -->
+<div id="change-message" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title">修改资料</h3>
+      </div>
+      <div class="modal-body">
+        <form id="message-form" class="form-horizontal">
+ 
+        	<div class="form-group">
+        	<label>用户名:&nbsp;&nbsp;</label><input type="text"  disabled/>&nbsp;&nbsp;&nbsp;
+        		<label><span style="color: red">*</span>昵称:&nbsp;&nbsp;</label><input type="text"/>&nbsp;&nbsp;&nbsp;
+        	</div>
+        	<div class="form-group">
+        		<label>职位:&nbsp;&nbsp;</label><input name="job" type="text"/>&nbsp;&nbsp;&nbsp;
+        		<label>性别:&nbsp;&nbsp;&nbsp;</label><input name="gender" type="radio" value="m"/>男&nbsp;&nbsp;<input name="gender" type="radio" value="f"/>女&nbsp;&nbsp;<input name="gender" type="radio" value="none"/>未知
+        	</div>
+        	 <div class="form-group">
+        		<label>生日:&nbsp;&nbsp;</label><input name="birthday" style="height: 29px" class="Wdate" type="text" onClick="WdatePicker({el:this,dateFmt:'yyyy-MM-dd'})">&nbsp;&nbsp;&nbsp;
+        		<label>地区:&nbsp;&nbsp;&nbsp;</label><input name="location" type="text" maxlength="15"/>
+        	</div>
+        	<div class="form-group">
+        		<label style="display: block;">个性签名:&nbsp;&nbsp;</label><textarea style="width: 400px;height: 80px;" maxlength="50"></textarea>&nbsp;&nbsp;&nbsp;
+        	</div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-danger">保存</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- 用户信息表单 -->
+<div class="container">
+    <div class="personal-property">
+        <dl class="photo-container">
+            <dt><img class="personal-photo" src="img/touxiang.jpg"></dt>
+            <br>
+            <dd class="focus_num text-center"><a href="#"><b>关注:4</b></a></dd>
+            <dd class="fans_num text-center"><a href="#"><b>粉丝:100</b></a></dd>
+        </dl>
+        <dl class="person-info">
+            <dt class="h2">吃了没文化的亏&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a style="cursor: pointer" data-toggle="modal" data-target="#change-message"><span class="glyphicon glyphicon glyphicon-pencil"></span></a></dt>
+            <dd style="font-size: 17px;margin-top: 15px"> 学生<span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>中国-广西<span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>1997-01-18<span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>男 </dd>
+            <dd class="person-intro"> 人生小伙三大过，赢过输过辉煌过 </dd>
+            <dd class="person-medal"> 100<span style="color: darkorange"> 柠檬币</span><span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>奖章: </dd>
+        </dl>
+    </div>
+    <div style="margin-top:50px;background-color: #f1f1f1"><br>
+    </div>
+    <div class="personal-section">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a class="person-menu" href="#my_active"  role="tab" data-toggle="tab">我的动态</a></li>
+            <li role="presentation"><a class="person-menu" href="#my_hobby" role="tab" data-toggle="tab">我的喜好</a></li>
+            <li role="presentation"><a class="person-menu" href="#my_article" role="tab" data-toggle="tab">我的文章</a></li>
+            <li role="presentation"><a class="person-menu" href="#my_video" role="tab" data-toggle="tab">我的视频</a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="my_active"> 我的动态。。。 </div>
+            <div role="tabpanel" class="tab-pane" id="my_hobby"> 我的喜好。。。 </div>
+            <div role="tabpanel" class="tab-pane" id="my_article"> 我的文章。。。 </div>
+            <div role="tabpanel" class="tab-pane" id="my_video"> 我的视频。。。 </div>
+        </div>
+    </div>
+</div>
+<script src="bootstrap-3.3.7-dist/js/jquery-3.2.1.min.js"></script> 
+<script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script src="My97DatePicker/WdatePicker.js"></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemon213.mapper.ArticleMapper">
+    <insert id="saveArticleInfo" parameterType="article">
+        INSERT INTO article(headline, user_id, picture, category_id, gmt_create, gmt_modified)
+        VALUES(#{headline}, #{userId}, #{picture}, #{categoryId}, #{gmtCreate}, #{gmtModified})
+    </insert>
+
+    <select id="selectLastId" resultType="int">
+        SELECT LAST_INSERT_ID() AS id
+    </select>
+
+    <insert id="saveArticleContent">
+        INSERT INTO art_content(id, content) VALUES(#{0}, #{1})
+    </insert>
+
+    <select id="selectArticleById" parameterType="int" resultMap="articleResultMap">
+        SELECT * FROM article LEFT JOIN art_content content ON article.id = content.id, art_category category
+        WHERE article.category_id = category.id
+        AND article.id = #{id}
+    </select>
+
+    <select id="selectArticleByCategory" parameterType="int" resultMap="articleResultMap">
+        SELECT * FROM article LEFT JOIN art_content content ON article.id = content.id, art_category
+        WHERE article.category_id = art_category.id
+        AND article.category_id = #{0}
+        ORDER BY gmt_create DESC
+        LIMIT #{1},#{2}
+    </select>
+
+    <select id="selectCountByCategory" parameterType="int" resultType="int">
+        SELECT COUNT(*) FROM article
+        WHERE category_id = #{id}
+    </select>
+
+    <update id="addArticlePraiseNum" parameterType="int">
+        UPDATE article SET praise_num = praise_num + 1
+        WHERE id = #{id}
+    </update>
+
+    <update id="setFirstPraiseUser">
+        UPDATE art_content SET praise_users=#{0}
+        WHERE id=#{1}
+    </update>
+
+    <update id="addPraiseUser">
+        UPDATE art_content SET praise_users = (SELECT CONCAT(praise_users, ',', #{0}))
+        WHERE id=#{1}
+    </update>
+
+    <select id="selectArticlePraiseUsers" parameterType="int" resultType="string">
+        SELECT praise_users FROM art_content
+        WHERE id = #{id}
+    </select>
+
+    <update id="addArticleCommentNum" parameterType="int">
+        UPDATE article SET comment_num =  comment_num + 1
+        WHERE id = #{id}
+    </update>
+
+    <update id="addArticleClickNum" parameterType="int">
+        UPDATE article SET click_num = click_num + 1
+        WHERE id = #{id}
+    </update>
+
+    <resultMap id="articleResultMap" type="com.lemon213.pojo.Article">
+        <id property="id" column="id"/>
+        <result property="headline" column="headline"/>
+        <result property="userId" column="user_id"/>
+        <result property="picture" column="picture"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="commentNum" column="comment_num"/>
+        <result property="isHot" column="is_hot"/>
+        <result property="isRecom" column="is_recom"/>
+        <result property="clickNum" column="click_num"/>
+        <result property="praiseNum" column="like_num"/>
+        <result property="gmtCreate" column="gmt_create"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="content" column="content"/>
+        <result property="category" column="category"/>
+        <association property="user" column="user_id" select="com.lemon213.mapper.UserMapper.selectUserById"
+                     javaType="user"/>
+    </resultMap>
+</mapper>

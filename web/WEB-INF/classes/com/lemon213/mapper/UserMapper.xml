@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemon213.mapper.UserMapper">
+
+  <insert id="saveUser" parameterType="user" useGeneratedKeys="true">
+    INSERT INTO tb_user(username, password, email, picture, nickname, gmt_create, gmt_modified)
+    VALUES(#{username}, #{password}, #{email}, #{picture}, #{nickname}, #{gmtCreate}, #{gmtModified})
+  </insert>
+  
+  <select id="selectUserByLogin" parameterType="user" resultMap="userResultMap">
+    SELECT * FROM tb_user user, user_pic pic
+    WHERE user.picture = pic.id
+          and username = #{username}
+          and password = #{password}
+  </select>
+
+  <select id="selectUserById" parameterType="int" resultMap="userResultMap">
+    SELECT * FROM tb_user user, user_pic pic
+    WHERE user.picture = pic.id
+    AND user.id = #{id}
+  </select>
+
+  <select id="isExistUser" parameterType="string" resultType="boolean" >
+    SELECT COUNT(*) FROM tb_user WHERE username=#{username}
+  </select>
+
+  <select id="selectUserMessage" parameterType="int" resultType="user">
+    SELECT username, nickname, job, introduce, gender, birthday, location, money
+    FROM tb_user WHERE id = #{id}
+  </select>
+
+  <update id="updateUser" parameterType="user">
+    UPDATE tb_user
+      <set>
+        <if test="nickname != null">nickname = #{nickname},</if>
+        <if test="introduce != null">introduce = #{introduce},</if>
+        <if test="gender != null">gender = #{gender},</if>
+        <if test="birthday != null">birthday = #{birthday},</if>
+        <if test="location != null">location = #{location},</if>
+        <if test="job != null">job = #{job},</if>
+        <if test="gmtModified != null">gmt_modified = #{gmtModified},</if>
+      </set>
+    WHERE id = #{id}
+  </update>
+
+  <select id="isExistNickname" parameterType="string" resultType="boolean" >
+    SELECT COUNT(*) FROM tb_user WHERE nickname=#{nickname}
+  </select>
+
+  <update id="updateBecomeEditor">
+    UPDATE tb_user SET is_editor = #{3},  editor_id = #{1}, gmt_modified = #{2} WHERE id = #{0}
+  </update>
+
+  <update id="updateUserMoney">
+    UPDATE tb_user SET money = money + #{1}
+    WHERE id = #{0}
+  </update>
+
+  <select id="selectUserIdByEditorId" parameterType="int" resultType="int">
+    SELECT id FROM tb_user
+    WHERE editor_id = #{id}
+  </select>
+
+  <update id="updateUserHeadPic">
+    UPDATE tb_user SET picture = #{1}
+    WHERE id = #{0}
+  </update>
+
+  <resultMap id="userResultMap" type="com.lemon213.pojo.User">
+    <id property="id" column="id"/>
+    <result property="username" column="username"/>
+    <result property="nickname" column="nickname"/>
+    <result property="email" column="email"/>
+    <result property="isEditor" column="is_editor"/>
+    <result property="isAuthori" column="is_authori"/>
+    <result property="picName" column="filename"/>
+    <result property="commentNum" column="comment_num"/>
+    <result property="editorId" column="editor_id"/>
+    <!--单词不能断开-->
+    <association property="editor" column="editor_id" select="com.lemon213.mapper.EditorMapper.selectEditorById"
+                 javaType="com.lemon213.pojo.Editor"/>
+  </resultMap>
+</mapper>

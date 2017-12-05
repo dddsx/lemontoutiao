@@ -1,0 +1,8 @@
+.navbar{
+    min-width: 500px; /* 指定导航栏的最小宽度, 这样就不会折叠了 */
+}
+.headPic{
+    width: 35px;
+    height: 35px;
+    margin: 9px 5px; /*上下, 左右*/
+}

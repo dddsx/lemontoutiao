@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemon213.mapper.UserPicMapper">
+    <insert id="saveUserPic" parameterType="userPic">
+        INSERT INTO user_pic(id, filename) VALUES (#{id}, #{filename})
+    </insert>
+
+    <select id="selectLastId" resultType="int">
+        SELECT LAST_INSERT_ID() AS id
+    </select>
+
+    <insert id="saveUserPicByFilename" parameterType="string">
+        INSERT INTO user_pic(filename) VALUES(#{filename})
+    </insert>
+</mapper>

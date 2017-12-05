@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<title>昨日头条</title>
+<!-- 如果使用了导航条，需要移除所有导航条的折叠和展开行为。    
+       对于栅格布局，额外增加 .col-xs-* 类或替换掉 .col-md-* 和 .col-lg-*。 不要担心，针
+        对超小屏幕设备的栅格系统能够在所有分辨率的环境下展开。-->
+<link href="bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="css/newslist.css" rel="stylesheet">
+<style type="text/css">
+body{
+    color: #333;
+    background-color:#f1f1f1;
+}
+.wrapper{
+    width: 450px;
+    padding: 50px;
+    margin:auto;
+    margin-top: 50px;
+    box-shadow: 0 0 8px rgba(0,0,0,.1);
+    background-color: white;
+}
+.home{
+    padding-left: 50px;
+}
+</style>
+</head>
+<body>
+<div class="home">
+<button type="button" class="btn btn-primary btn-lg">
+  <span class="glyphicon glyphicon-home"></span>返回首页
+</button>
+</div>
+<div class="wrapper">
+<h3 class="text-center">登 录</h3><br>
+<form id="loginForm" name="loginForm" class="form-horizontal" action="login.html" method="post">
+            <div class="form-group">
+                <label class="col-xs-3 control-label" for="username1">用户名</label>
+                <div class="col-xs-8">
+                    <input class="form-control" id="username" type="text" placeholder="" required data-msg-required="请输入用户名" minlength="5" data-msg-minlength="没有低于5位的用户名" maxlength="16">
+                </div>
+                <div class="col-xs-1"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-3 control-label" for="password">密&nbsp;&nbsp;&nbsp;&nbsp;码</label>
+                <div class="col-xs-8">
+                    <input class="form-control" name="password" type="password" placeholder="" required data-msg-required="请输入密码" minlength="6" data-msg-minlength="没有低于6位的密码" maxlength="20">
+                </div>
+                <div class="col-xs-1"></div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-offset-1 col-xs-11">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="clause1" value="clause1" required data-msg-required="请先阅读并接受条款">我已阅读并接受<a href="#">用户条款</a>
+                        </label>
+                        <span for="clause1" class="error"></span>
+                    </div>
+                </div>
+    </div>
+            <br>
+            <div class="text-center">
+                <button class="btn btn-primary btn-lg" type="submit">登 录</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button class="btn btn-danger btn-lg" type="reset">重 置</button>            
+            </div>
+            <br>
+            <a href="register.html">还没有账号？点我注册</a>
+</form>
+</div>
+<script src="bootstrap-3.3.7-dist/js/jquery-3.2.1.min.js"></script> 
+<script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script src="js/jquery.validate.js"></script>
+<script src="js/myvalidate.js"></script>
+</body>
+</html>

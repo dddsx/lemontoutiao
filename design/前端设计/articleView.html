@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<title>昨日头条</title>
+<!-- 如果使用了导航条，需要移除所有导航条的折叠和展开行为。
+	   对于栅格布局，额外增加 .col-xs-* 类或替换掉 .col-md-* 和 .col-lg-*。 不要担心，针
+		对超小屏幕设备的栅格系统能够在所有分辨率的环境下展开。-->
+<link href="bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+.container{
+	width: 1340px !important;
+}
+body{
+	overflow-x:hidden;
+	padding-top: 63px;
+}
+/* 左边导航栏样式 */
+.left-nav{
+	width:  110px;
+	height: 600px;
+	position: fixed;
+	top: 100px;
+	font: 18px "PingFang SC","Hiragino Sans GB","Microsoft YaHei","WenQuanYi Micro Hei","Helvetica Neue",Arial,sans-serif;
+}
+hr{
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.article-box{
+	width:740px;
+}
+</style>
+</head>
+<body>
+<!-- 导航条 -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+                   <div>
+                    <ul class="nav navbar-nav">
+                        <li><a href="#" style="color: aliceblue;">推荐</a></li>
+                        <li><a href="#" style="color: aliceblue;">热点</a></li>
+                        <li><a href="#" style="color: aliceblue;">科技</a></li>
+                        <li><a href="#" style="color: aliceblue;">搞笑</a></li>
+                        <li><a href="#" style="color: aliceblue;">娱乐</a></li>
+                        <li><a href="#" style="color: aliceblue;">游戏</a></li>
+                        <li><a href="#" style="color: aliceblue;">体育</a></li>
+                        <li><a href="#" style="color: aliceblue;">动漫</a></li>
+                        <li class="dropdown">
+          					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: aliceblue;">更多<span class="caret"></span></a>
+         					<ul class="dropdown-menu text-center" style="min-width:100%;">
+          						<li><a href="#">电影</a></li>
+          						<li role="separator" class="divider"></li>
+           						<li><a href="#">汽车</a></li>
+           						<li role="separator" class="divider"></li>
+            					<li><a href="#">军事</a></li>
+            					<li role="separator" class="divider"></li>
+            					<li><a href="#">故事</a></li>
+            					<li role="separator" class="divider"></li>
+            					<li><a href="#">财经</a></li>
+            					<li role="separator" class="divider"></li>
+            					<li><a href="#">段子</a></li>
+          					</ul>
+       				 </li>
+                    </ul>
+                    <ul class="nav navbar-nav" style="float: right">
+                        <li><a href="login.html" style="color: aliceblue;">登录</a></li>
+                        <li><a href="register.html" style="color: aliceblue;">注册</a></li>
+                        <li><a href="#" style="color: aliceblue;">反馈</a></li>
+                        <li><a href="#" style="color: aliceblue;">投诉</a></li>
+                    </ul>
+                </div>
+	</div>
+</nav>
+
+
+<!-- 主内容 -->
+<div class="container">
+    <div class="row">
+        <div class="col-xs-2" style="padding-left: 40px;">
+            <div class="left-nav text-center">
+                <ul style="list-style-type:none;padding: 0px;">
+                	<li style="margin-bottom: 5px;">
+                		<a href="#" style="color: #606060"><span class="glyphicon glyphicon glyphicon-edit" aria-hidden="true"><b>评论</b></span></a>
+                	</li><hr>
+                	<li>
+                		<a href="#" style="color: #606060"><span class="glyphicon glyphicon glyphicon glyphicon-hand-up" aria-hidden="true"><b>返回顶部</b></span></a>
+                	</li><hr>
+                	<li style="margin-bottom: 5px;">
+                		<a href="#" style="color: #606060"><span class="glyphicon glyphicon glyphicon glyphicon-home" aria-hidden="true"><b>返回首页</b></span></a>
+                	</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-xs-7">
+            <div class="article-box">
+                <h1 class="article-title">ff</h1>
+                <div class="article-sub"></div>
+                <div class="article-content" style="background-color: indianred">
+                	<div>
+                		fddsf
+                	</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-3" style="background-color: chartreuse">.col-md-1</div>
+    </div>
+</div>
+<script src="bootstrap-3.3.7-dist/js/jquery-3.2.1.min.js"></script> 
+<script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+</body>
+</html>
