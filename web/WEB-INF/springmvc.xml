@@ -17,11 +17,25 @@
         http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd">
     <!-- 自动扫描包下的带@controller注解的类 -->
     <context:component-scan base-package="com.lemon213.controller"/>
-    <!-- 一个配置节解决映射器和适配器的配置注解配置 -->
-    <mvc:annotation-driven/>
 
-    <!-- 加入这句后, 所有静态资源的问题都解决了, 太神了！ -->
+    <!-- 使用默认的Servlet来响应静态文件。加上这段配置，这个默认的Servlet会在找不到url时去访问静态资源，
+    从而避免了静态资源加载时出现404错误-->
     <mvc:default-servlet-handler/>
+
+    <!-- 装配自定义的类型转换器 -->
+    <mvc:annotation-driven conversion-service="conversionService"/>
+
+    <!-- 自定义的类型转换器 -->
+    <bean id="conversionService"
+          class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="com.lemon213.converter.StringToDateConverter">
+                    <property name="datePattern" value="yyyy-MM-dd"/>
+                </bean>
+            </set>
+        </property>
+    </bean>
 
     <!-- 视图解析器 -->
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">

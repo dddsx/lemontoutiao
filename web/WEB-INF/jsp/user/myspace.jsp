@@ -2,9 +2,14 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <title>个人资料</title>
+    <%
+        response.setHeader("Cache-Control","no-store");
+        response.setHeader("Pragrma","no-cache");
+        response.setDateHeader("Expires",0);
+    %>
     <%@ include file="/public/head.jspf" %>
-    <link href="${path}/css/navbar.css" rel="stylesheet">
+    <c:set value="${applicationScope.headPicPath}" var="headPicPath" />
+    <link href="${root}/css/navbar.css" rel="stylesheet">
     <style>
         body{
             background-color:#f1f1f1;
@@ -107,7 +112,7 @@
                 <h3 class="modal-title">修改资料</h3>
             </div>
             <div class="modal-body">
-                <form id="message-form" class="form-horizontal" action="${path}/user/change_message" enctype="multipart/form-data" method="post">
+                <form id="message-form" class="form-horizontal" action="${root}/user/change_message" enctype="multipart/form-data" method="post">
                     <div class="form-group">
                         <label>用户名:&nbsp;&nbsp;</label><input type="text"  value="${requestScope.user_message.username}" disabled/>&nbsp;&nbsp;&nbsp;
                         <label><span style="color: red">*</span>昵称:&nbsp;&nbsp;</label><input id="nickname" name="nickname" type="text" maxlength="20" value="${requestScope.user_message.nickname}"/>&nbsp;&nbsp;&nbsp;
@@ -142,7 +147,7 @@
 <div class="container">
     <div class="personal-property">
         <dl class="photo-container">
-            <dt><img class="personal-photo" src="${path}/${applicationScope.headPicPath}/${sessionScope.sessionUser.picName}"></dt>
+            <dt><img class="personal-photo" src="${root}/${headPicPath}/${sessionScope.sessionUser.picName}"></dt>
             <dd class="focus_num text-center"><a href="#" onclick="{alert('敬请期待!')}">关注:0</a></dd>
             <dd class="fans_num text-center"><a href="#" onclick="{alert('敬请期待!')}">粉丝:0</a></dd>
         </dl>
@@ -210,9 +215,9 @@
         </div>
     </div>
 </div>
-<script src="${path}/op-plugin/bootstrap-3.3.7-dist/js/jquery-3.2.1.min.js"></script>
-<script src="${path}/op-plugin/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-<script src="${path}/op-plugin/My97DatePicker/WdatePicker.js"></script>
+<script src="${root}/op-plugin/bootstrap-3.3.7-dist/js/jquery-3.2.1.min.js"></script>
+<script src="${root}/op-plugin/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script src="${root}/op-plugin/My97DatePicker/WdatePicker.js"></script>
 <script>
     $(function(){
         $("#save").click(function () {

@@ -28,7 +28,7 @@ import java.util.UUID;
  * @author xiaobu
  * @describe 响应用户的基本请求, 例如登录、注册等
  */
-@Controller("userController")
+@Controller
 @RequestMapping("/user")
 public class UserController {
 
@@ -54,6 +54,10 @@ public class UserController {
      */
     @RequestMapping(value = "/loginCheck", method = RequestMethod.POST)
     public ModelAndView loginCheck(ModelAndView mv, @Valid User user, Errors errors, Model model, HttpSession session){
+        Enumeration<String> sessionAttris = session.getAttributeNames();
+        while (sessionAttris.hasMoreElements()){
+            session.removeAttribute(sessionAttris.nextElement());
+        }
         if(errors.hasErrors()){
             model.addAttribute("errorMessage", "用户名和密码要符合要求！");
             mv.setViewName("/user/login");
@@ -71,7 +75,7 @@ public class UserController {
                 session.removeAttribute("currentURL");
                 mv.setViewName("redirect:" + currentURL);
             } else {
-                mv.setViewName("redirect:/article/news_hot");
+                mv.setViewName("redirect:/article/news_recommend");
             }
             return mv;
         }
@@ -110,7 +114,7 @@ public class UserController {
             session.removeAttribute(sessionAttris.nextElement());
         }
         session.invalidate();
-        return "redirect:/article/news_hot";
+        return "redirect:/article/news_recommend";
     }
 
     /**
@@ -134,28 +138,11 @@ public class UserController {
      * @describe 响应用户的个人信息修改请求, 如果修改失败, 给出适当的提示信息
      */
     @RequestMapping(value = "/change_message", method = RequestMethod.POST)
-    public String changeMessage(@RequestParam(required = false) String nickname,
-                                @RequestParam(required = false) String gender,
-                                @RequestParam(required = false) String job,
-                                @RequestParam(required = false) String birthday,
-                                @RequestParam(required = false) String location,
-                                @RequestParam(required = false) String introduce,
-                                @RequestParam(value = "headPic", required = false) MultipartFile headPic,
-                                HttpServletRequest request,
-                                RedirectAttributes ra, HttpSession session) throws Exception{
+    public String changeMessage(User user, @RequestParam(value = "headPic", required = false) MultipartFile headPic,
+                                HttpServletRequest request, RedirectAttributes ra, HttpSession session) throws Exception{
         User sessionUser = (User)session.getAttribute("sessionUser");
-        User user = new User();
         user.setId(((User)session.getAttribute("sessionUser")).getId());
-        user.setNickname(nickname);
-        user.setGender(gender);
-        user.setJob(job);
-        user.setLocation(location);
-        user.setIntroduce(introduce);
-        user.setGmtModified(new Date());
-        if(birthday != null && !birthday.equals("")) {
-            user.setBirthday(new java.text.SimpleDateFormat("yyyy-MM-dd").parse(birthday));
-        }
-
+        System.out.println(user.getBirthday());
         //上传用户头像, 如上传失败则不执行后面的用户资料更新操作
         if(headPic != null && !headPic.isEmpty()){
             String filename = headPic.getOriginalFilename();
@@ -171,7 +158,8 @@ public class UserController {
                 return "redirect:/user/myspace";
             } else {
                 String generateFilename = UUID.randomUUID().toString() + ".jpg";
-                headPic.transferTo(new File(path + generateFilename));
+                //System.out.println(path + File.separator + generateFilename);
+                headPic.transferTo(new File(path + File.separator + generateFilename));
                 Integer headPicId = userPicService.saveUserHeadPic(generateFilename);
                 boolean result = userService.updateUserHeadPic(sessionUser.getId(), headPicId);
                 if(result){
@@ -189,7 +177,7 @@ public class UserController {
         else if(!userService.tryUpdateUser(user, sessionUser.getNickname())){
             ra.addFlashAttribute("errorMessage", "昵称已存在！");
         } else{
-            sessionUser.setNickname(nickname);
+            sessionUser.setNickname(user.getNickname());
             sessionUser.setShowName();
             session.setAttribute("sessionUser", sessionUser);
         }

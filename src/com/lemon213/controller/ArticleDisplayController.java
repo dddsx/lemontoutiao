@@ -2,7 +2,7 @@ package com.lemon213.controller;
 
 import com.lemon213.pojo.Article;
 import com.lemon213.service.ArticleService;
-import com.lemon213.util.ShowDateFormat;
+import com.lemon213.util.DataFormatUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +21,7 @@ import java.util.Map;
  * @author xiaobu
  * @describe 文章板块的展示和加载
  */
-@Controller("articleReadController")
+@Controller
 @RequestMapping("/article")
 public class ArticleDisplayController {
     @Resource
@@ -55,13 +55,18 @@ public class ArticleDisplayController {
     @RequestMapping(value = "/{category}")
     public String showArticleByCategory(@PathVariable String category, Model model){
         Integer categoryId = categoryMap.get(category);
+        List<Article> articleList = null;
         if(categoryId == null)
             categoryId = 1;
-        List<Article> articleList = articleService.selectArticleByCategory(categoryId, 0, PAGE_SIZE);
+        if(categoryId == 1)
+            articleList = articleService.selectRecommendArticle(0, PAGE_SIZE);
+        else
+            articleList = articleService.selectArticleByCategory(categoryId, 0, PAGE_SIZE);
 
+        System.out.println(articleList.size());
         //格式化日期输出
         for(Article article : articleList){
-            article.setShowTime(ShowDateFormat.format(article.getGmtCreate()));
+            article.setShowTime(DataFormatUtil.dateFormat(article.getGmtCreate()));
         }
 
         model.addAttribute("articleList", articleList);
@@ -85,11 +90,15 @@ public class ArticleDisplayController {
         Integer categoryId = Integer.parseInt((String)map.get("category"));
         Integer page = Integer.parseInt((String)map.get("page"));
         System.out.println(categoryId +" " + page);
-
         ModelAndView mv = new ModelAndView();
         mv.setView(new MappingJackson2JsonView());
 
-        int totalItem =articleService.selectCountByCategory(categoryId); //总条目数
+        int totalItem;
+        if(categoryId != 1)
+            totalItem = articleService.selectCountByCategory(categoryId); //获取某个类别文章总数
+        else
+            totalItem = articleService.selectRecomArticleCount(); //获取推荐文章总数
+
         int requestPage = page; //请求第几页
         int lastPage; //最大页数
         if(totalItem % PAGE_SIZE == 0){
@@ -99,7 +108,7 @@ public class ArticleDisplayController {
         }
         if(requestPage > lastPage ){ //请求页数超过了最大页数
             mv.addObject("message", "noMoreNews");
-            Thread.sleep(1500);  //模拟用户等待新闻加载
+            Thread.sleep(500);  //模拟用户等待新闻加载
             return mv;
         }
         int startIndex = PAGE_SIZE  * (requestPage - 1); //筛选起始处
@@ -109,9 +118,15 @@ public class ArticleDisplayController {
         } else {
             selectNum = totalItem % PAGE_SIZE;
         }
-        List<Article> articleList = articleService.selectArticleByCategory(categoryId, startIndex, selectNum);
+
+        List<Article> articleList = null;
+        if(categoryId != 1)
+            articleList = articleService.selectArticleByCategory(categoryId, startIndex, selectNum);
+        else
+            articleList = articleService.selectRecommendArticle(startIndex, selectNum);
+
         for(Article article : articleList){
-            article.setShowTime(ShowDateFormat.format(article.getGmtCreate()));
+            article.setShowTime(DataFormatUtil.dateFormat(article.getGmtCreate()));
         }
         mv.addObject("message", "loading");
         mv.addObject("articleList", articleList);

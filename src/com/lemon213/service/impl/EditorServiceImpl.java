@@ -32,18 +32,14 @@ public class EditorServiceImpl implements EditorService{
      * @describe 尝试使用户成为小编
      * @param editor, 内含用户填写的实名信息
      * @param userId, 用户的id
-     * @return 如果成为小编成功, 则返回数据库生成的小编id, 失败则返回-1
+     * @return 如果成为小编成功, 则返回数据库生成的小编id
      */
     public int becomeEditor(Editor editor, Integer userId){
         Date now = new Date();
         editor.setGmtCreate(now);
         editor.setGmtModified(now);
-        int result = editorMapper.saveEditor(editor);
-        if(result == 1){
-            int editorId = editorMapper.selectLastId();
-            userMapper.updateBecomeEditor(userId, editorId, editor.getGmtCreate(), true);
-            return editorId;
-        }
-        return -1;
+        editorMapper.saveEditor(editor);
+        userMapper.updateBecomeEditor(userId, editor.getId(), editor.getGmtCreate(), true);
+        return editor.getId();
     }
 }

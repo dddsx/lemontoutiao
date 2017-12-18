@@ -4,25 +4,24 @@ import com.lemon213.pojo.Article;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface ArticleMapper {
     //根据文章id, 查询出文章的信息、内容
     Article selectArticleById(int id);
 
-    /**
-     * @param id, 文章类型id
-     * @param startIndex, 筛选时的起始索引
-     * @param selectNum, 筛选数
-     * @return 同一类型的数篇文章
-     */
+    //根据文章类型id, 起始索引和筛选数查询文章
     List<Article> selectArticleByCategory(int id, int startIndex, int selectNum);
+
+    //根据起始索引和筛选数查询推荐文章
+    List<Article> selectRecommendArticle(int startIndex, int selectNum);
 
     //根据文章类型id, 查询出该类型文章的总数
     int selectCountByCategory(int id);
 
-    //查询最新数据库自动生成的主键id
-    int selectLastId();
+    //查询推荐文章总数
+    int selectRecomArticleCount();
 
     //保存文章的基本信息
     int saveArticleInfo(Article article);
@@ -47,4 +46,16 @@ public interface ArticleMapper {
 
     //给文章的点击数+1
     int addArticleClickNum(int articleId);
+
+    //根据文章类别和是否审核来查询文章
+    List<Article> selectArticleByCategoryAndIsCheck(Map<String, Object> params);
+
+    //根据是否审核来查询推荐文章
+    List<Article> selectRecomArticleByIsCheck(Map<String, Object> params);
+
+    //根据种类和是否审核计算文章数
+    int selectCountByCategoryAndIsCheck(Map<String, Object> params);
+
+    //根据是否审核计算推荐文章数
+    int selectRecomCountByIsCheck(Map<String, Object> params);
 }

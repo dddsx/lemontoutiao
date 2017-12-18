@@ -42,6 +42,8 @@ public class User implements Serializable{
 
     private Integer commentNum;
 
+    private Integer privilege;
+
     private Date gmtCreate;
 
     private Date gmtModified;
@@ -152,6 +154,14 @@ public class User implements Serializable{
 
     public void setIsAuthori(Boolean isAuthori) {
         this.isAuthori = isAuthori;
+    }
+
+    public Integer getPrivilege() {
+        return privilege;
+    }
+
+    public void setPrivilege(Integer privilege) {
+        this.privilege = privilege;
     }
 
     public Date getGmtCreate() {

@@ -6,7 +6,9 @@ import com.lemon213.service.ArticleService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xiaobu
@@ -35,21 +37,12 @@ public class ArticleServiceImpl implements ArticleService{
     /**
      * @describe 尝试保存文章到数据库
      * @param article, 内含文章的基本信息
-     * @return 如果保存成功, 返回数据库最新生成的文章id, 否则返回-1
+     * @return 如果保存成功, 返回数据库最新生成的文章id
      */
     public int saveArticle(Article article){
-        int result = articleMapper.saveArticleInfo(article);
-        int articleId;
-        if(result == 1){
-            articleId = articleMapper.selectLastId(); //插入文章记录后, 获得数据库自动生成的文章id
-        } else {
-            return -1;
-        }
-        if(articleMapper.saveArticleContent(articleId, article.getContent())==1){ //根据生成的文章id, 保存文章的内容
-            return articleId;
-        } else{
-            return -1;
-        }
+        articleMapper.saveArticleInfo(article);
+        articleMapper.saveArticleContent(article.getId(), article.getContent()); //根据生成的文章id, 保存文章的内容
+        return article.getId();
     }
 
     /**
@@ -84,5 +77,61 @@ public class ArticleServiceImpl implements ArticleService{
         Integer editorUserId = userMapper.selectUserIdByEditorId(editorId); //获取该作者的用户id, 以便给他涨币
         userMapper.updateUserMoney(editorUserId, 1); //给被点赞的作者增加1枚柠檬币
         return true;
+    }
+
+    /**
+     * @describe 根据起始索引, 筛选数, 返回推荐文章
+     */
+    public List<Article> selectRecommendArticle(int startIndex, int selectNum) {
+        return articleMapper.selectRecommendArticle(startIndex, selectNum);
+    }
+
+    /**
+     * @describe 返回推荐文章的总数目
+     */
+    public int selectRecomArticleCount() {
+        return articleMapper.selectRecomArticleCount();
+    }
+
+    /**
+     * @describe 根据文章类别和是否审核来查询文章
+     */
+    public List<Article> selectArticleByCategoryAndIsCheck(Integer categoryId, Integer isCheck, Integer startIndex, Integer selectNum) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("categoryId", categoryId);
+        params.put("isCheck", isCheck);
+        params.put("startIndex", startIndex);
+        params.put("selectNum", selectNum);
+        return articleMapper.selectArticleByCategoryAndIsCheck(params);
+    }
+
+    /**
+     * @describe 根据是否审核来查询推荐文章
+     */
+    public List<Article> selectRecomArticleByIsCheck(Integer isCheck, Integer startIndex, Integer selectNum) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("isCheck", isCheck);
+        params.put("startIndex", startIndex);
+        params.put("selectNum", selectNum);
+        return articleMapper.selectRecomArticleByIsCheck(params);
+    }
+
+    /**
+     * @describe 根据种类和是否审核计算文章数
+     */
+    public int selectCountByCategoryAndIsCheck(Integer categoryId, Integer isCheck) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("isCheck", isCheck);
+        params.put("categoryId", categoryId);
+        return  articleMapper.selectCountByCategoryAndIsCheck(params);
+    }
+
+    /**
+     * @describe 根据是否审核计算推荐文章数
+     */
+    public int selectRecomCountByIsCheck(Integer isCheck) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("isCheck", isCheck);
+        return articleMapper.selectRecomCountByIsCheck(params);
     }
 }

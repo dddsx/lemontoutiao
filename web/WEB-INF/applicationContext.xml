@@ -26,15 +26,6 @@
     <!-- 使用PropertyOverrideConfigurer后处理器加载数据源参数 -->
     <context:property-placeholder location="classpath:db.properties"/>
 
-    <!-- 让配置文件属性能够注入到类中 -->
-    <bean id="filePathManage" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <property name="locations">
-            <array>
-                <value>classpath:filePath.properties</value>
-            </array>
-        </property>
-    </bean>
-
     <!-- 配置c3p0数据源 -->
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="${dataSource.driverClass}" />

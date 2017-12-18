@@ -7,7 +7,7 @@
         response.setDateHeader("Expires",0);
     %>
     <%@ include file="/public/head.jspf" %>
-    <link rel="stylesheet" href="${path}/css/jquery.idcode.css">
+    <link rel="stylesheet" href="${root}/css/jquery.idcode.css">
     <style type="text/css">
         body{
             background-color:#f1f1f1;
@@ -85,7 +85,7 @@
             <div class="col-xs-offset-1 col-xs-11">
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="clause" value="clause" required data-msg-required="请先阅读并接受条款">我已阅读并接受<a href="${path}/agreement.html" target="_blank">用户条款</a>
+                        <input type="checkbox" name="clause" value="clause" required data-msg-required="请先阅读并接受条款">我已阅读并接受<a href="${root}/agreement.html" target="_blank">用户条款</a>
                     </label>
                     <span for="clause" class="error"></span>
                 </div>
@@ -99,15 +99,15 @@
         <a href="login">已有账号？去登录</a>
     </form>
 </div>
-<script src="${path}/op-plugin/bootstrap-3.3.7-dist/js/jquery-3.2.1.min.js"></script>
-<script src="${path}/op-plugin/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-<script src="${path}/js/jquery.validate.js"></script>
-<script src="${path}/js/myvalidate.js"></script>
-<script src="${path}/js/jquery.idcode.js"></script>
+<script src="${root}/op-plugin/bootstrap-3.3.7-dist/js/jquery-3.2.1.min.js"></script>
+<script src="${root}/op-plugin/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script src="${root}/js/jquery.validate.js"></script>
+<script src="${root}/js/myvalidate.js"></script>
+<script src="${root}/js/jquery.idcode.js"></script>
 <script>
     $(function(){
         $(".backhome").click(function(){
-            window.location.href="${path}";
+            window.location.href="${root}";
         });
 
         var errorWin = $('#errorWin').popover();

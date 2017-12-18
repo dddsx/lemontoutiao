@@ -9,13 +9,13 @@
     %>
     <%@ include file="/public/head.jspf" %>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link href="${path}/op-plugin/umeditor1.2.3-utf8-jsp/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
-    <script type="text/javascript" src="${path}/op-plugin/umeditor1.2.3-utf8-jsp/third-party/jquery.min.js"></script>
-    <script type="text/javascript" src="${path}/op-plugin/umeditor1.2.3-utf8-jsp/third-party/template.min.js"></script>
-    <script type="text/javascript" charset="utf-8" src="${path}/op-plugin/umeditor1.2.3-utf8-jsp/umeditor.config.js"></script>
-    <script type="text/javascript" charset="utf-8" src="${path}/op-plugin/umeditor1.2.3-utf8-jsp/umeditor.min.js"></script>
-    <script type="text/javascript" src="${path}/op-plugin/umeditor1.2.3-utf8-jsp/lang/zh-cn/zh-cn.js"></script>
-    <link href="${path}/css/navbar.css" rel="stylesheet">
+    <link href="${root}/op-plugin/umeditor1.2.3-utf8-jsp/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="${root}/op-plugin/umeditor1.2.3-utf8-jsp/third-party/jquery.min.js"></script>
+    <script type="text/javascript" src="${root}/op-plugin/umeditor1.2.3-utf8-jsp/third-party/template.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="${root}/op-plugin/umeditor1.2.3-utf8-jsp/umeditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="${root}/op-plugin/umeditor1.2.3-utf8-jsp/umeditor.min.js"></script>
+    <script type="text/javascript" src="${root}/op-plugin/umeditor1.2.3-utf8-jsp/lang/zh-cn/zh-cn.js"></script>
+    <link href="${root}/css/navbar.css" rel="stylesheet">
     <style type="text/css">
         body{
             margin-top: 55px;
@@ -40,7 +40,7 @@
 <!-- 动态引入导航条 -->
 <jsp:include page="../lib/navbar.jsp"/>
 <div class="container">
-<form id="edit" action="${path}/commitArticle" method="post">
+<form id="edit" action="${root}/commitArticle" method="post">
     <h1 class="text-center">发表文章</h1>
     <span class="error">${requestScope.errorMessage}</span>
     <p style="color: grey">文章分类、标题</p>
@@ -70,8 +70,8 @@
         <button class="btn btn-primary btn-lg" type="submit">发表文章</button>
 </form>
 </div>
-<script src="${path}/op-plugin/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-<script src="${path}/js/jquery.validate.js"></script>
+<script src="${root}/op-plugin/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script src="${root}/js/jquery.validate.js"></script>
 <script>
     var um = UM.getEditor('myEditor');
     $(function(){

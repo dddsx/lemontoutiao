@@ -4,7 +4,7 @@ import com.lemon213.pojo.Article;
 import com.lemon213.pojo.Comment;
 import com.lemon213.service.ArticleService;
 import com.lemon213.service.CommentService;
-import com.lemon213.util.ShowDateFormat;
+import com.lemon213.util.DataFormatUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +17,7 @@ import java.util.List;
  * @author xiaobu
  * @describe 响应用户的文章阅读
  */
-@Controller("articleDetailsController")
+@Controller
 public class ArticleReadController {
     @Resource
     private ArticleService articleService;
@@ -38,10 +38,9 @@ public class ArticleReadController {
 
         //格式化评论日期输出
         for(Comment comment : commentList){
-            comment.setShowTime(ShowDateFormat.format(comment.getGmtCreate()));
+            comment.setShowTime(DataFormatUtil.dateFormat(comment.getGmtCreate()));
             //System.out.println(comment);
         }
-
         model.addAttribute("article", article);
         model.addAttribute("commentList", commentList);
         return "/article/view";

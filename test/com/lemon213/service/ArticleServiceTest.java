@@ -29,4 +29,14 @@ public class ArticleServiceTest {
         boolean result = articleService.praiseArticle(53196182,"20170003" , 20171123);
         System.out.println(result);
     }
+
+    @Test
+    public void testSelectCountByCategoryAndIsCheck(){
+        System.out.println(articleService.selectCountByCategoryAndIsCheck(2, 1));
+    }
+
+    @Test
+    public void testSelectRecomCountByIsCheck(){
+        System.out.println(articleService.selectRecomCountByIsCheck(null));
+    }
 }

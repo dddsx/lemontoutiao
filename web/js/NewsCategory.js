@@ -62,7 +62,7 @@ function loadNews(category, page) {
                 });
                 $(".reload").text("我还想要......");
             } else if(data.message === "noMoreNews"){
-                $(".reload").text("暂时没有更多新闻...").unbind();
+                $(".reload").text("来不了了......").unbind();
             }
         },
         error:function () {

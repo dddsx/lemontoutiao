@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemon213.mapper.AdminMapper">
+    <select id="selectAdminByLogin" parameterType="admin" resultMap="adminResultMap">
+        SELECT * FROM tb_admin
+        WHERE username = #{username}
+        and password = #{password}
+    </select>
+
+    <resultMap id="adminResultMap" type="com.lemon213.pojo.Admin">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="nickname" column="nickname"/>
+        <result property="email" column="email"/>
+        <result property="dealNum" column="deal_num"/>
+    </resultMap>
+</mapper>

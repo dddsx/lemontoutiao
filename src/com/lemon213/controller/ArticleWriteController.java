@@ -19,7 +19,7 @@ import java.util.Date;
  * @author xiaobu
  * @describe 处理用户的文章编写请求
  */
-@Controller("newsController")
+@Controller
 public class ArticleWriteController {
     @Resource
     private ArticleService articleService;

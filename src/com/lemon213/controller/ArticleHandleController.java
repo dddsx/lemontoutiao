@@ -20,8 +20,8 @@ import java.util.Map;
  * @author xiaobu
  * @describe 处理文章的其他细节请求, 例如点赞、评论
  */
-@Controller("articleDetailController")
-public class ArticleDetailController {
+@Controller
+public class ArticleHandleController {
     @Resource
     private ArticleService articleService;
     @Resource

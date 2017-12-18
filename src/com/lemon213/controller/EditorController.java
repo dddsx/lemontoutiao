@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
  * @author xiaobu
  * @describe 主要用于响应和小编板块相关的请求
  */
-@Controller("editorController")
+@Controller
 public class EditorController {
     @Resource
     private EditorService editorService;

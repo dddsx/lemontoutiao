@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -39,5 +40,21 @@ public class ArticleMapperTest {
     public void testSelectArticlePraiseUser(){
         String users = articleMapper.selectArticlePraiseUsers(53196181);
         System.out.println(users);
+    }
+
+    @Test
+    public void testSelectArticleByCategoryAndIsCheck(){
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("startIndex", 0);
+        params.put("selectNum",20);
+        List<Article> articleList = articleMapper.selectArticleByCategoryAndIsCheck(params);
+        for (Article anArticleList : articleList) {
+            System.out.println(anArticleList);
+        }
+    }
+
+    @Test
+    public void testSelectRecomArticleByIsCheck(){
+
     }
 }

@@ -20,6 +20,8 @@ public class Article implements Serializable{
 
     private Boolean isRecom;
 
+    private Boolean isCheck;
+
     private Integer clickNum;
 
     private Integer praiseNum;
@@ -31,12 +33,12 @@ public class Article implements Serializable{
     //外键
     private String content;
 
-    private String category;
-
     private User user;
 
     //页面展示用
     private String showTime;
+
+    private String category;
 
     public Article() {
         super();
@@ -122,6 +124,14 @@ public class Article implements Serializable{
         this.praiseNum = praiseNum;
     }
 
+    public Boolean getIsCheck() {
+        return isCheck;
+    }
+
+    public void setIsCheck(Boolean isCheck) {
+        this.isCheck = isCheck;
+    }
+
     public Date getGmtCreate() {
         return gmtCreate;
     }
@@ -146,14 +156,6 @@ public class Article implements Serializable{
         this.content = content;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
     public User getUser() {
         return user;
     }
@@ -170,6 +172,14 @@ public class Article implements Serializable{
         this.showTime = showTime;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     @Override
     public String toString() {
         return "Article{" +
@@ -181,12 +191,12 @@ public class Article implements Serializable{
                 ", commentNum=" + commentNum +
                 ", isHot=" + isHot +
                 ", isRecom=" + isRecom +
+                ", isCheck=" + isCheck +
                 ", clickNum=" + clickNum +
                 ", praiseNum=" + praiseNum +
                 ", gmtCreate=" + gmtCreate +
                 ", gmtModified=" + gmtModified +
                 ", content='" + content + '\'' +
-                ", category='" + category + '\'' +
                 ", user=" + user +
                 ", showTime='" + showTime + '\'' +
                 '}';

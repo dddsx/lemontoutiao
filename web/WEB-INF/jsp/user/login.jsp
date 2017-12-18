@@ -68,15 +68,15 @@
         <a href="register">还没有账号？点我注册</a>
     </form>
 </div>
-<script src="${path}/op-plugin/bootstrap-3.3.7-dist/js/jquery-3.2.1.min.js"></script>
-<script src="${path}/op-plugin/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-<script src="${path}/js/jquery.validate.js"></script>
-<script src="${path}/js/myvalidate.js"></script>
+<script src="${root}/op-plugin/bootstrap-3.3.7-dist/js/jquery-3.2.1.min.js"></script>
+<script src="${root}/op-plugin/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script src="${root}/js/jquery.validate.js"></script>
+<script src="${root}/js/myvalidate.js"></script>
 <script>
     var errorWin = $('#errorWin').popover();
     $(function(){
         $(".backhome").click(function(){
-            window.location.href="${path}";
+            window.location.href="${root}";
         });
 
         var errorWin = $('#errorWin').popover();

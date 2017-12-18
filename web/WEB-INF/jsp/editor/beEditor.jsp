@@ -43,13 +43,13 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-6">
-            <img src="${path}/img/materia/xiaobian.jpg" class="xiaobian">
+            <img src="${root}/img/materia/xiaobian.jpg" class="xiaobian">
         </div>
         <div class="col-xs-6">
             <p class="text-center h4">
                 <b style="color:crimson">要想成为小编，你必须认真填写以下信息</b>
             </p><hr>
-            <form id="loginForm" name="loginForm" class="form-horizontal" action="${path}/saveEditor" method="post">
+            <form id="loginForm" name="loginForm" class="form-horizontal" action="${root}/saveEditor" method="post">
                 <div class="form-group">
                     <label class="col-xs-3 control-label">真实姓名</label>
                     <div class="col-xs-8">
@@ -93,8 +93,8 @@
         </div>
     </div>
 </div>
-<script src="${path}/op-plugin/bootstrap-3.3.7-dist/js/jquery-3.2.1.min.js"></script>
-<script src="${path}/op-plugin/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script src="${root}/op-plugin/bootstrap-3.3.7-dist/js/jquery-3.2.1.min.js"></script>
+<script src="${root}/op-plugin/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
 <script src="js/jquery.validate.js"></script>
 <script src="js/myvalidate.js"></script>
 <script>

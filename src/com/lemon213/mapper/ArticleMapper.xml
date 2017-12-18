@@ -4,11 +4,10 @@
     <insert id="saveArticleInfo" parameterType="article">
         INSERT INTO article(headline, user_id, picture, category_id, gmt_create, gmt_modified)
         VALUES(#{headline}, #{userId}, #{picture}, #{categoryId}, #{gmtCreate}, #{gmtModified})
+        <selectKey keyProperty="id" order="AFTER" resultType="int">
+            select last_insert_id()
+        </selectKey>
     </insert>
-
-    <select id="selectLastId" resultType="int">
-        SELECT LAST_INSERT_ID() AS id
-    </select>
 
     <insert id="saveArticleContent">
         INSERT INTO art_content(id, content) VALUES(#{0}, #{1})
@@ -20,17 +19,28 @@
         AND article.id = #{id}
     </select>
 
-    <select id="selectArticleByCategory" parameterType="int" resultMap="articleResultMap">
-        SELECT * FROM article LEFT JOIN art_content content ON article.id = content.id, art_category
-        WHERE article.category_id = art_category.id
-        AND article.category_id = #{0}
+    <select id="selectArticleByCategory" resultMap="articleResultMap">
+        SELECT * FROM article LEFT JOIN art_content content ON article.id = content.id
+        WHERE article.category_id = #{0}
         ORDER BY gmt_create DESC
         LIMIT #{1},#{2}
+    </select>
+
+    <select id="selectRecommendArticle" resultMap="articleResultMap">
+        SELECT * FROM article LEFT JOIN art_content ON article.id = art_content.id
+        WHERE is_recom = 1
+        ORDER BY gmt_create DESC
+        LIMIT #{0},#{1}
     </select>
 
     <select id="selectCountByCategory" parameterType="int" resultType="int">
         SELECT COUNT(*) FROM article
         WHERE category_id = #{id}
+    </select>
+
+    <select id="selectRecomArticleCount" resultType="int">
+        SELECT COUNT(*) FROM article
+        WHERE is_recom = 1
     </select>
 
     <update id="addArticlePraiseNum" parameterType="int">
@@ -63,6 +73,50 @@
         WHERE id = #{id}
     </update>
 
+    <select id="selectArticleByCategoryAndIsCheck" resultMap="articleResultMap">
+        SELECT * FROM article LEFT JOIN art_content content ON article.id = content.id
+        <where>
+            <if test="categoryId != null">
+              category_id = #{categoryId}
+            </if>
+            <if test="isCheck != null">
+              and is_check = #{isCheck}
+            </if>
+        </where>
+        ORDER BY gmt_create DESC
+        LIMIT #{startIndex}, #{selectNum}
+    </select>
+
+    <select id="selectCountByCategoryAndIsCheck" resultType="int">
+        SELECT COUNT(*) FROM article LEFT JOIN art_content content ON article.id = content.id
+        <where>
+            <if test="categoryId != null">
+                category_id = #{categoryId}
+            </if>
+            <if test="isCheck != null">
+                and is_check = #{isCheck}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectRecomArticleByIsCheck" resultMap="articleResultMap">
+        SELECT * FROM article LEFT JOIN art_content content ON article.id = content.id
+        WHERE is_recom = 1
+        <if test="isCheck != null">
+              and is_check = #{isCheck}
+        </if>
+        ORDER BY gmt_create DESC
+        LIMIT #{startIndex}, #{selectNum}
+    </select>
+
+    <select id="selectRecomCountByIsCheck" resultType="int">
+        SELECT COUNT(*) FROM article LEFT JOIN art_content content ON article.id = content.id
+        WHERE is_recom = 1
+        <if test="isCheck != null">
+              and is_check = #{isCheck}
+        </if>
+    </select>
+
     <resultMap id="articleResultMap" type="com.lemon213.pojo.Article">
         <id property="id" column="id"/>
         <result property="headline" column="headline"/>
@@ -72,12 +126,12 @@
         <result property="commentNum" column="comment_num"/>
         <result property="isHot" column="is_hot"/>
         <result property="isRecom" column="is_recom"/>
+        <result property="isCheck" column="is_check"/>
         <result property="clickNum" column="click_num"/>
         <result property="praiseNum" column="like_num"/>
         <result property="gmtCreate" column="gmt_create"/>
         <result property="gmtModified" column="gmt_modified"/>
         <result property="content" column="content"/>
-        <result property="category" column="category"/>
         <association property="user" column="user_id" select="com.lemon213.mapper.UserMapper.selectUserById"
                      javaType="user"/>
     </resultMap>

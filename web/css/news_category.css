@@ -54,3 +54,17 @@ span.chose{
     font-size: 18px;
     color: #13777e;
 }
+
+.right-nav{
+    border-top: 2px solid #ed4040;
+    background-color:#f4f5f6;
+    margin-bottom: 40px;
+}
+
+.company {
+    padding: 8px 20px;
+    background-color: #f4f5f6;
+    font-size: 14px;
+    text-align: left;
+    color: #777;
+}

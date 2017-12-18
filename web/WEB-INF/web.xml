@@ -57,7 +57,7 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
-  <!-- 文章编写过滤器 -->
+  <!-- 成为作者过滤器 -->
   <filter>
     <filter-name>beEditorFilter</filter-name>
     <filter-class>com.lemon213.filter.BeEditorFilter</filter-class>
@@ -81,6 +81,7 @@
     <url-pattern>/articleComment</url-pattern>
     <url-pattern>/user/myspace</url-pattern>
     <url-pattern>/user/change_message</url-pattern>
+    <url-pattern>/commitArticle</url-pattern>
   </filter-mapping>
 <!--  <filter> 支持跨域访问
     <filter-name>CORS</filter-name>

@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<c:set value="${pageContext.request.contextPath}" var="path" />
+<c:set value="${pageContext.request.contextPath}" var="root" />
 <html>
 <head>
     <title>Title</title>
@@ -16,7 +16,7 @@
 </head>
 <body>
     <div class="img-container">
-        <img src="${path}/img/materia/404.jpg" class="img">
+        <img src="${root}/img/materia/404.jpg" class="img">
     </div>
 </body>
 </html>

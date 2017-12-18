@@ -20,13 +20,13 @@
 <div class="wrap">
 <c:if test="${empty requestScope.errorMessage}">
     <h3>发表成功!</h3><br>
-    <span><a href="${path}/view/${requestScope.articleId}">查看文章</a>&nbsp;&nbsp;&nbsp;<a href="${path}">返回首页</a></span>
+    <span><a href="${root}/view/${requestScope.articleId}">查看文章</a>&nbsp;&nbsp;&nbsp;<a href="${root}">返回首页</a></span>
 </c:if>
 <c:if test="${!empty requestScope.errorMessage}">
     ${requestScope.errorMessage}
 </c:if>
 </div>
-<script src="${path}/op-plugin/bootstrap-3.3.7-dist/js/jquery-3.2.1.min.js"></script>
-<script src="${path}/op-plugin/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script src="${root}/op-plugin/bootstrap-3.3.7-dist/js/jquery-3.2.1.min.js"></script>
+<script src="${root}/op-plugin/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
 </body>
 </html>
