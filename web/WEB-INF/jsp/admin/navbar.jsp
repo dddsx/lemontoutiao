@@ -2,5 +2,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set value="${pageContext.request.contextPath}" var="root" />
 <div style="font-size: 16px;background-color:#f4f5f6;width:100%;height: 25px;padding-right: 30px">
-    <div style="float: right">欢迎您，管理员<span>${sessionScope.sessionAdmin.nickname}</span>&nbsp;<a href="#">注销</a></div>
+    <div style="float: left;margin-left:10px"><a href="${root}/">返回首页</a> </div>
+    <div style="float: right">欢迎您，管理员<span>${sessionScope.sessionAdmin.nickname}</span>&nbsp;<a href="${root}/admin/logout">注销</a></div>
 </div>

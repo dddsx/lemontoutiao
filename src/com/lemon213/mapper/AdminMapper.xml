@@ -7,11 +7,15 @@
         and password = #{password}
     </select>
 
+    <select id="selectAdminById" parameterType="int" resultMap="adminResultMap">
+        SELECT * FROM tb_admin
+        WHERE id = #{adminId}
+    </select>
+
     <resultMap id="adminResultMap" type="com.lemon213.pojo.Admin">
         <id property="id" column="id"/>
         <result property="username" column="username"/>
         <result property="nickname" column="nickname"/>
         <result property="email" column="email"/>
-        <result property="dealNum" column="deal_num"/>
     </resultMap>
 </mapper>

@@ -19,6 +19,7 @@ public class LoginFilter implements Filter{
         HttpServletResponse res = (HttpServletResponse)servletResponse;
         //判断当前session是否有用户信息
         if(req.getSession().getAttribute("sessionUser") == null){
+            System.out.println(req.getHeader("referer"));
             req.getSession().setAttribute("currentURL", req.getHeader("referer"));
             res.sendRedirect(req.getContextPath() + "/user/login");
         } else{

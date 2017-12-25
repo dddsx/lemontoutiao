@@ -1,9 +1,10 @@
 package com.lemon213.pojo;
 
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Admin {
+public class Admin implements Serializable{
     private Integer id;
 
     private String username;
@@ -13,8 +14,6 @@ public class Admin {
     private String nickname;
 
     private String email;
-
-    private Integer dealNum;
 
     private Date gmtCreate;
 
@@ -60,14 +59,6 @@ public class Admin {
         this.email = email;
     }
 
-    public Integer getDealNum() {
-        return dealNum;
-    }
-
-    public void setDealNum(Integer dealNum) {
-        this.dealNum = dealNum;
-    }
-
     public Date getGmtCreate() {
         return gmtCreate;
     }
@@ -92,7 +83,6 @@ public class Admin {
                 ", password='" + password + '\'' +
                 ", nickname='" + nickname + '\'' +
                 ", email='" + email + '\'' +
-                ", dealNum=" + dealNum +
                 ", gmtCreate=" + gmtCreate +
                 ", gmtModify=" + gmtModify +
                 '}';

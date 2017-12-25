@@ -12,4 +12,9 @@
     <select id="selectEditorById" parameterType="int" resultType="com.lemon213.pojo.Editor">
         SELECT * FROM editor WHERE id = #{id}
     </select>
+
+    <update id="addEditorPubNum" parameterType="int">
+        UPDATE editor SET pub_num = pub_num + 1
+        WHERE id = (SELECT editor_id FROM tb_user WHERE tb_user.id = #{userId})
+    </update>
 </mapper>

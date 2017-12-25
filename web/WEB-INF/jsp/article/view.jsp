@@ -39,7 +39,7 @@
             width:740px;
         }
         .editor-info{
-            height: 70px;
+            font-family: 微软雅黑, serif;
             word-wrap:break-word;
             word-break:break-all;
             overflow: hidden;
@@ -48,7 +48,7 @@
             border-top: 2px solid #ed4040;
         }
         .editor-intro{
-            margin-top: 20px;
+            margin-top: 10px;
             font-size: 18px;
             word-wrap:break-word;
             word-break:break-all;
@@ -73,7 +73,7 @@
         .comment-container{
             margin-top: 55px;
             padding: 0px;
-            margin-bottom: 100px;
+            margin-bottom: 30px;
         }
         .user-img{
             width: 45px;
@@ -82,9 +82,12 @@
         .user-name{
             color: #2e6da4;
             font-size: 18px;
+            font-family: 微软雅黑, serif;
+            font-weight: 500;
         }
         .comment-time{
             font-size: 18px;
+            font-family: 微软雅黑, serif;
         }
         .comment-content{
             font-size: 14px;
@@ -127,6 +130,14 @@
                         <li><a href="${root}/article/news_finance">财经</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="${root}/article/essay_joke">段子</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="${root}/article/beautiful_essay">美文</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="${root}/article/news_culture">文化</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="${root}/article/news_search">探索</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="${root}/article/news_cate">美食</a></li>
                     </ul>
                 </li>
             </ul>
@@ -174,7 +185,7 @@
                         <a href="#top" style="color: #606060"><span class="glyphicon glyphicon glyphicon glyphicon-hand-up" aria-hidden="true"><b>返回顶部</b></span></a>
                     </li><hr>
                     <li style="margin-bottom: 5px;">
-                        <a href="${root}" style="color: #606060"><span class="glyphicon glyphicon glyphicon glyphicon-home" aria-hidden="true"><b>返回首页</b></span></a>
+                        <a href="${root}/" style="color: #606060"><span class="glyphicon glyphicon glyphicon glyphicon-home" aria-hidden="true"><b>返回首页</b></span></a>
                     </li>
                 </ul>
             </div>
@@ -184,7 +195,7 @@
                 <h1 class="article-title"><b>${requestScope.article.headline}</b></h1>
                 <div class="article-sub">
                     <span style="color: #5e5e5e">
-                        ${requestScope.article.user.nickname}&nbsp;
+                        ${requestScope.article.user.nickname}&nbsp;&nbsp;
                         <%
                             java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             Article article = (Article) request.getAttribute("article");
@@ -244,11 +255,20 @@
 <script src="${root}/js/jquery.validate.js"></script>
 <script src="${root}/js/myvalidate.js"></script>
 <script>
+    var havePraise = ${requestScope.havePraise};
     $(function () {
-        $("#praise-btn").click(praise);
+        var $praiseBtn = $("#praise-btn");
+        if(havePraise) {
+            $praiseBtn.css("border", "2px solid #ed4040");
+        }
+        $praiseBtn.click(praise);
     });
 
     function praise() {
+        if(havePraise) {
+            $("#prompt").text("您已为该文章点过赞！");
+            return false;
+        }
         $.ajax({
             type: "post",
             url: "${root}/articlePraise",
@@ -267,6 +287,7 @@
                     var text = $praise_num.text();
                     text = parseInt(text) + 1;
                     $praise_num.text(text);
+                    havePraise = 1;
                 } else if(data === "repeat"){
                     $("#praise-btn").css("border", "2px solid #ed4040");
                     $("#prompt").text("您已为该文章点过赞！");
@@ -288,10 +309,15 @@
                 commentId : commentId
             }),
             success:function (data) {
-                var $loveNum = $("li[comment-id=" + commentId + "] .love_num");
-                var text = $loveNum.text();
-                text = parseInt(text) + 1;
-                $loveNum.text(text);
+                if(data === "success") {
+                    var $loveNum = $("li[comment-id=" + commentId + "] .love_num");
+                    var text = $loveNum.text();
+                    text = parseInt(text) + 1;
+                    $loveNum.text(text);
+                }
+                if(data === "login") {
+                    alert("请先登录！");
+                }
             },
             error:function () {
                 alert("服务器异常，请联系开发人员");

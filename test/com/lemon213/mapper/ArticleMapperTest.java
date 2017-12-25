@@ -25,7 +25,7 @@ public class ArticleMapperTest {
 
     @Test
     public void testSelectArticleByCategory(){
-        List<Article> articleList = articleMapper.selectArticleByCategory(4, 10 , 30);
+        List<Article> articleList = articleMapper.selectLegalArticleByCategory(4, 10 , 30);
         for (Article anArticleList : articleList) {
             System.out.println(anArticleList);
         }

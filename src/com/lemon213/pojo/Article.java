@@ -10,7 +10,7 @@ public class Article implements Serializable{
 
     private Integer userId;
 
-    private String picture;
+    private String cover;
 
     private Integer categoryId;
 
@@ -31,9 +31,11 @@ public class Article implements Serializable{
     private Date gmtModified;
 
     //外键
-    private String content;
+    private String content; //文章内容
 
-    private User user;
+    private User user; //文章作者
+
+    private Admin checker; //文章审核管理员
 
     //页面展示用
     private String showTime;
@@ -68,12 +70,12 @@ public class Article implements Serializable{
         this.userId = userId;
     }
 
-    public String getPicture() {
-        return picture;
+    public String getCover() {
+        return cover;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 
     public Integer getCategoryId() {
@@ -180,13 +182,21 @@ public class Article implements Serializable{
         this.category = category;
     }
 
+    public Admin getChecker() {
+        return checker;
+    }
+
+    public void setChecker(Admin checker) {
+        this.checker = checker;
+    }
+
     @Override
     public String toString() {
         return "Article{" +
                 "id=" + id +
                 ", headline='" + headline + '\'' +
                 ", userId=" + userId +
-                ", picture='" + picture + '\'' +
+                ", cover='" + cover + '\'' +
                 ", categoryId=" + categoryId +
                 ", commentNum=" + commentNum +
                 ", isHot=" + isHot +
@@ -198,7 +208,9 @@ public class Article implements Serializable{
                 ", gmtModified=" + gmtModified +
                 ", content='" + content + '\'' +
                 ", user=" + user +
+                ", checker=" + checker +
                 ", showTime='" + showTime + '\'' +
+                ", category='" + category + '\'' +
                 '}';
     }
 }

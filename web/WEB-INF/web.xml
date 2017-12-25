@@ -57,20 +57,15 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
-  <!-- 成为作者过滤器 -->
+  <!-- 作者认证过滤器 -->
   <filter>
-    <filter-name>beEditorFilter</filter-name>
-    <filter-class>com.lemon213.filter.BeEditorFilter</filter-class>
+    <filter-name>EditorApprove</filter-name>
+    <filter-class>com.lemon213.filter.EditorApproveFilter</filter-class>
   </filter>
   <filter-mapping>
-    <filter-name>beEditorFilter</filter-name>
+    <filter-name>EditorApprove</filter-name>
     <url-pattern>/write</url-pattern>
   </filter-mapping>
-
-  <!-- 应用数据初始化监听器 -->
-  <listener>
-    <listener-class>com.lemon213.listener.InitDataListener</listener-class>
-  </listener>
   <!-- 用户登录过滤器 -->
   <filter>
     <filter-name>LoginFiter</filter-name>
@@ -81,14 +76,28 @@
     <url-pattern>/articleComment</url-pattern>
     <url-pattern>/user/myspace</url-pattern>
     <url-pattern>/user/change_message</url-pattern>
-    <url-pattern>/commitArticle</url-pattern>
+    <url-pattern>/updateArticleForm</url-pattern>
   </filter-mapping>
-<!--  <filter> 支持跨域访问
-    <filter-name>CORS</filter-name>
-    <filter-class>com.thetransactioncompany.cors.CORSFilter</filter-class>
+  <!-- 管理员登录过滤器 -->
+  <filter>
+    <filter-name>AdminLogin</filter-name>
+    <filter-class>com.lemon213.filter.AdminLoginFilter</filter-class>
   </filter>
   <filter-mapping>
-    <filter-name>CORS</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>-->
+    <filter-name>AdminLogin</filter-name>
+    <url-pattern>/admin/articleList</url-pattern>
+    <url-pattern>/admin/articleCheck</url-pattern>
+    <url-pattern>/admin/articleDelete</url-pattern>
+    <url-pattern>/admin/articleRecom</url-pattern>
+    <url-pattern>/admin/articleView</url-pattern>
+  </filter-mapping>
+
+  <!-- 应用数据初始化监听器 -->
+  <listener>
+    <listener-class>com.lemon213.listener.InitDataListener</listener-class>
+  </listener>
+
+  <session-config>
+    <session-timeout>60</session-timeout> <!-- 单位是分钟 -->
+  </session-config>
 </web-app>

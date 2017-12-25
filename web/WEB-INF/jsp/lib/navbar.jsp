@@ -5,12 +5,12 @@
 <!-- 导航条 -->
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
-        <div class="navbar-header"> <a class="navbar-brand" href="${root}/article/recommend">柠檬头条</a> </div>
+        <div class="navbar-header"> <a class="navbar-brand" href="${root}/">柠檬头条</a> </div>
         <div>
             <ul class="nav navbar-nav">
                 <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">天气<span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <iframe name="weather_inc" src="http://i.tianqi.com/index.php?c=code&id=51"  width="225" height="80" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+                    <ul class="dropdown-menu" id="weather">
+                        ${applicationScope.weather}
                     </ul>
                 </li>
             </ul>
@@ -31,7 +31,7 @@
                             <li><a style="color:#555555" href="#" onclick="{alert('敬请期待!')}">我的关注</a></li>
                             <li><a style="color:#555555" href="#" onclick="{alert('敬请期待!')}">我的粉丝</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a style="color:#555555" href="${root}/user/myspace">个人资料</a></li>
+                            <li><a style="color:#555555" href="${root}/user/myspace">个人空间</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a style="color:#555555" href="${root}/user/logout">退出</a></li>
                         </ul>

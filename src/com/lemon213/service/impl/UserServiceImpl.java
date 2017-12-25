@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService{
      * @return Boolean, 用户信息是否修改成功, 修改失败通常是由昵称重复引起的
      */
     public boolean tryUpdateUser(User user, String oldNickname){
-        if(!user.getNickname().equals(oldNickname) && userMapper.isExistNickname(user.getNickname())){
+        if(!user.getNickname().equalsIgnoreCase(oldNickname) && userMapper.isExistNickname(user.getNickname())){
             return false;
         } else{
             userMapper.updateUser(user);

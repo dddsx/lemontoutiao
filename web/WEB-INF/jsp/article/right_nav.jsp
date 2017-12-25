@@ -21,13 +21,18 @@
 </div>
 
 <div class="right-nav">
-    <h4 class="text-center">24小时热闻</h4>
+    <h4 class="text-center">一周热闻</h4>
+    <ul>
+        <c:forEach var="article" items="${applicationScope.weekHotArticles}">
+            <li class="hot-article"><a href="${root}/view/${article.id}">${article.headline}</a></li>
+        </c:forEach>
+    </ul>
 </div>
 
 <div class="right-nav company">
     <p>©  2017 柠檬头条网</p>
     <p>宾阳恰柠檬混吃等死有限公司</p>
     <p>违法和不良信息举报：010-58341833</p>
-    <p><a href="http://www.12377.cn" style="color: #777">中国互联网不良信息举报中心</a></p>
-    <p><a href="${root}/admin/login" style="color: #777">后台管理系统入口</a></p>
+    <p><a href="http://www.12377.cn" style="color: #777" target="_blank">中国互联网不良信息举报中心</a></p>
+    <p><a href="${root}/admin/articleList" style="color: #777" target="_blank">后台管理系统入口</a></p>
 </div>

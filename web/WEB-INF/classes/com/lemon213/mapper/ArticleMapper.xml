@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lemon213.mapper.ArticleMapper">
+    <!-- 文章编写模块 -->
     <insert id="saveArticleInfo" parameterType="article">
-        INSERT INTO article(headline, user_id, picture, category_id, gmt_create, gmt_modified)
-        VALUES(#{headline}, #{userId}, #{picture}, #{categoryId}, #{gmtCreate}, #{gmtModified})
+        INSERT INTO article(headline, user_id, cover, category_id, gmt_create, gmt_modified)
+        VALUES(#{headline}, #{userId}, #{cover}, #{categoryId}, #{gmtCreate}, #{gmtModified})
         <selectKey keyProperty="id" order="AFTER" resultType="int">
             select last_insert_id()
         </selectKey>
@@ -13,36 +14,69 @@
         INSERT INTO art_content(id, content) VALUES(#{0}, #{1})
     </insert>
 
-    <select id="selectArticleById" parameterType="int" resultMap="articleResultMap">
-        SELECT * FROM article LEFT JOIN art_content content ON article.id = content.id, art_category category
-        WHERE article.category_id = category.id
-        AND article.id = #{id}
-    </select>
+    <update id="updateArticle">
+        UPDATE article SET headline=#{1},category_id=#{2},gmt_modified=#{3},is_check=0
+        WHERE id=#{0}
+    </update>
 
-    <select id="selectArticleByCategory" resultMap="articleResultMap">
-        SELECT * FROM article LEFT JOIN art_content content ON article.id = content.id
-        WHERE article.category_id = #{0}
+    <update id="updateArticleContent">
+        UPDATE art_content SET content=#{1}
+        WHERE id=#{0}
+    </update>
+
+    <!-- 用户文章管理模块 -->
+    <select id="selectArticleByUserId" resultMap="articleResultMap">
+        SELECT * FROM article LEFT JOIN art_content ON article.id = art_content.id
+        WHERE user_id = #{0}
         ORDER BY gmt_create DESC
         LIMIT #{1},#{2}
     </select>
 
-    <select id="selectRecommendArticle" resultMap="articleResultMap">
+    <select id="selectArticleOfUserCount" parameterType="int" resultType="int">
+        SELECT COUNT(*) FROM article
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 文章阅读模块 -->
+    <select id="selectArticleById" parameterType="int" resultMap="articleResultMap">
+        SELECT * FROM article LEFT JOIN art_content ON article.id = art_content.id
+        WHERE article.id = #{id}
+    </select>
+
+    <select id="selectLegalArticleByCategory" resultMap="articleResultMap">
+        SELECT * FROM article LEFT JOIN art_content ON article.id = art_content.id
+        WHERE article.category_id = #{0}
+        AND is_check = 1
+        ORDER BY gmt_create DESC
+        LIMIT #{1},#{2}
+    </select>
+
+    <select id="selectLegalRecommendArticle" resultMap="articleResultMap">
         SELECT * FROM article LEFT JOIN art_content ON article.id = art_content.id
         WHERE is_recom = 1
+        AND is_check = 1
         ORDER BY gmt_create DESC
         LIMIT #{0},#{1}
     </select>
 
-    <select id="selectCountByCategory" parameterType="int" resultType="int">
+    <select id="selectLegalCountByCategory" parameterType="int" resultType="int">
         SELECT COUNT(*) FROM article
         WHERE category_id = #{id}
+        AND is_check = 1
     </select>
 
-    <select id="selectRecomArticleCount" resultType="int">
+    <select id="selectLegalRecomArticleCount" resultType="int">
         SELECT COUNT(*) FROM article
         WHERE is_recom = 1
+        AND is_check = 1
     </select>
 
+    <update id="addArticleClickNum" parameterType="int">
+        UPDATE article SET click_num = click_num + 1
+        WHERE id = #{id}
+    </update>
+
+    <!-- 文章点赞模块 -->
     <update id="addArticlePraiseNum" parameterType="int">
         UPDATE article SET praise_num = praise_num + 1
         WHERE id = #{id}
@@ -63,16 +97,13 @@
         WHERE id = #{id}
     </select>
 
+    <!-- 文章评论模块 -->
     <update id="addArticleCommentNum" parameterType="int">
         UPDATE article SET comment_num =  comment_num + 1
         WHERE id = #{id}
     </update>
 
-    <update id="addArticleClickNum" parameterType="int">
-        UPDATE article SET click_num = click_num + 1
-        WHERE id = #{id}
-    </update>
-
+    <!-- 管理员处理文章模块 -->
     <select id="selectArticleByCategoryAndIsCheck" resultMap="articleResultMap">
         SELECT * FROM article LEFT JOIN art_content content ON article.id = content.id
         <where>
@@ -117,11 +148,35 @@
         </if>
     </select>
 
+    <delete id="deleteArticleById" parameterType="int">
+        DELETE FROM article
+        WHERE id = #{articleId}
+    </delete>
+
+    <update id="updateArticleIsRecom">
+        UPDATE article SET is_recom = #{1}
+        WHERE id = #{0}
+    </update>
+
+    <update id="updateArticleIsCheck">
+        UPDATE article SET is_check = #{1}, checker = #{2}
+        WHERE id = #{0}
+    </update>
+
+    <!-- 每周热门模块 -->
+    <select id="selectWeekHotArticle" resultType="article">
+        SELECT * FROM article
+        WHERE gmt_create >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+        AND is_check=1
+        ORDER BY click_num DESC
+        LIMIT 0, 7
+    </select>
+
     <resultMap id="articleResultMap" type="com.lemon213.pojo.Article">
         <id property="id" column="id"/>
         <result property="headline" column="headline"/>
         <result property="userId" column="user_id"/>
-        <result property="picture" column="picture"/>
+        <result property="cover" column="cover"/>
         <result property="categoryId" column="category_id"/>
         <result property="commentNum" column="comment_num"/>
         <result property="isHot" column="is_hot"/>
@@ -134,5 +189,7 @@
         <result property="content" column="content"/>
         <association property="user" column="user_id" select="com.lemon213.mapper.UserMapper.selectUserById"
                      javaType="user"/>
+        <association property="checker" column="checker" select="com.lemon213.mapper.AdminMapper.selectAdminById"
+                     javaType="admin"/>
     </resultMap>
 </mapper>

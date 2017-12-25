@@ -8,8 +8,13 @@
 
     <select id="selectCommentsByArticleId" parameterType="int" resultMap="commentResultMap">
         SELECT * FROM art_comment WHERE art_id = #{id}
-        ORDER BY gmt_create DESC
+        ORDER BY praise_num DESC,gmt_create DESC
     </select>
+
+    <update id="addPraiseNum" parameterType="int">
+        UPDATE  art_comment SET praise_num = praise_num + 1
+        WHERE id = #{commentId}
+    </update>
 
     <resultMap id="commentResultMap" type="com.lemon213.pojo.Comment">
         <id property="id" column="id"/>

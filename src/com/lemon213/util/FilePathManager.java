@@ -8,18 +8,21 @@ import java.util.Properties;
  * @describe 管理、获取各类图片的路径
  */
 public class FilePathManager {
-    private static Properties prop  = null;
+    private static String headPicPath;
+    private static String coverPath;
     static {
         try {
             InputStream inStream = FilePathManager.class.getClassLoader().getResourceAsStream("filePath.properties");
-            prop = new Properties();
+            Properties prop = new Properties();
             prop.load(inStream);
+            headPicPath = prop.getProperty("headPicPath");
+            coverPath = prop.getProperty("coverPath");
         } catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    public static String getHeadPicPath(){
-        return prop.getProperty("headPicPath");
-    }
+    public static String getHeadPicPath(){return headPicPath;}
+
+    public static String getCoverPath(){return coverPath;}
 }

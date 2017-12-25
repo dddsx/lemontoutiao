@@ -27,4 +27,20 @@ public interface ArticleService {
     int selectCountByCategoryAndIsCheck(Integer categoryId, Integer isCheck);
 
     int selectRecomCountByIsCheck(Integer isCheck);
+
+    int deleteArticleById(Integer articleId);
+
+    int updateArticleIsCheck(Integer articleId, boolean isCheck, Integer checker);
+
+    int updateArticleIsRecom(Integer articleId, boolean isRecom);
+
+    List<Article> selectArticleByUserId(Integer userId, Integer startIndex, Integer selectNum);
+
+    int selectArticleOfUserCount(Integer userId);
+
+    List<Article> selectWeekHotArticle();
+
+    boolean updateArticle(Article article);
+
+    boolean havePraise(Integer articleId, String userId);
 }

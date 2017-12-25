@@ -10,4 +10,6 @@ public interface CommentMapper {
     int saveArticleComment(Comment comment);
 
     List<Comment> selectCommentsByArticleId(Integer id);
+
+    int addPraiseNum(Integer commentId);
 }

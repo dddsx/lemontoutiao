@@ -10,4 +10,6 @@ public interface EditorMapper {
 
     //通过小编id, 查询小编信息
     Editor selectEditorById(Integer id);
+
+    int addEditorPubNum(Integer userId);
 }

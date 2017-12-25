@@ -4,14 +4,17 @@
     <insert id="saveEditor" parameterType="editor">
         INSERT INTO editor(phone, real_name, idcard, workspace, gmt_create, gmt_modified)
         VALUES(#{phone}, #{realName}, #{idcard}, #{workspace}, #{gmtCreate}, #{gmtModified})
+        <selectKey keyProperty="id" order="AFTER" resultType="int">
+            select last_insert_id()
+        </selectKey>
     </insert>
 
     <select id="selectEditorById" parameterType="int" resultType="com.lemon213.pojo.Editor">
         SELECT * FROM editor WHERE id = #{id}
     </select>
 
-     <select id="selectLastId" resultType="int">
-        SELECT LAST_INSERT_ID() AS id
-    </select>
-
+    <update id="addEditorPubNum" parameterType="int">
+        UPDATE editor SET pub_num = pub_num + 1
+        WHERE id = (SELECT editor_id FROM tb_user WHERE tb_user.id = #{userId})
+    </update>
 </mapper>

@@ -1,7 +1,9 @@
 package com.lemon213.service.impl;
 import com.lemon213.mapper.ArticleMapper;
+import com.lemon213.mapper.EditorMapper;
 import com.lemon213.mapper.UserMapper;
 import com.lemon213.pojo.Article;
+import com.lemon213.pojo.User;
 import com.lemon213.service.ArticleService;
 import org.springframework.stereotype.Service;
 
@@ -19,19 +21,21 @@ public class ArticleServiceImpl implements ArticleService{
     private ArticleMapper articleMapper;
     @Resource
     private UserMapper userMapper;
+    @Resource
+    private EditorMapper editorMapper;
 
     /**
      * @describe 根据文章类型id, 返回该类型的文章总数
      */
     public int selectCountByCategory(int categoryId){
-        return articleMapper.selectCountByCategory(categoryId);
+        return articleMapper.selectLegalCountByCategory(categoryId);
     }
 
     /**
      * @describe 根据文章类型id, 起始索引, 筛选数, 返回数篇该类型的文章
      */
     public List<Article> selectArticleByCategory(int categoryId, int startIndex, int selectNum){
-        return articleMapper.selectArticleByCategory(categoryId, startIndex, selectNum);
+        return articleMapper.selectLegalArticleByCategory(categoryId, startIndex, selectNum);
     }
 
     /**
@@ -42,6 +46,7 @@ public class ArticleServiceImpl implements ArticleService{
     public int saveArticle(Article article){
         articleMapper.saveArticleInfo(article);
         articleMapper.saveArticleContent(article.getId(), article.getContent()); //根据生成的文章id, 保存文章的内容
+        editorMapper.addEditorPubNum(article.getUserId());
         return article.getId();
     }
 
@@ -80,17 +85,31 @@ public class ArticleServiceImpl implements ArticleService{
     }
 
     /**
+     * @describe 检查用户是否已给该文章点过赞
+     */
+    public boolean havePraise(Integer articleId, String userId){
+        String userList = articleMapper.selectArticlePraiseUsers(articleId);
+        if(userList == null || userList.equals(""))
+            return false;
+        String[] users = userList.split(",");
+        for (String user : users)
+            if (user.equals(userId))
+                return true;
+        return false;
+    }
+
+    /**
      * @describe 根据起始索引, 筛选数, 返回推荐文章
      */
     public List<Article> selectRecommendArticle(int startIndex, int selectNum) {
-        return articleMapper.selectRecommendArticle(startIndex, selectNum);
+        return articleMapper.selectLegalRecommendArticle(startIndex, selectNum);
     }
 
     /**
      * @describe 返回推荐文章的总数目
      */
     public int selectRecomArticleCount() {
-        return articleMapper.selectRecomArticleCount();
+        return articleMapper.selectLegalRecomArticleCount();
     }
 
     /**
@@ -133,5 +152,56 @@ public class ArticleServiceImpl implements ArticleService{
         Map<String, Object> params = new HashMap<>();
         params.put("isCheck", isCheck);
         return articleMapper.selectRecomCountByIsCheck(params);
+    }
+
+    /**
+     * @describe 根据文章id删除文章
+     */
+    public int deleteArticleById(Integer articleId){
+        return articleMapper.deleteArticleById(articleId);
+    }
+
+    /**
+     * @describe 根据文章id更新文章的审核状态
+     */
+    public int updateArticleIsCheck(Integer articleId, boolean isCheck, Integer checker){
+        return articleMapper.updateArticleIsCheck(articleId, isCheck, checker);
+    }
+
+    /**
+     * @describe 根据文章id更新文章的推荐状态
+     */
+    public int updateArticleIsRecom(Integer articleId, boolean isRecom){
+        return articleMapper.updateArticleIsRecom(articleId, isRecom);
+    }
+
+    /**
+     * @describe 根据用户ID，筛选指定页数的文章
+     */
+    public List<Article> selectArticleByUserId(Integer userId, Integer startIndex, Integer selectNum){
+        return articleMapper.selectArticleByUserId(userId, startIndex, selectNum);
+    }
+
+    /**
+     * @describe 根据用户ID，返回该用户编写的文章数
+     */
+    public int selectArticleOfUserCount(Integer userId){
+        return articleMapper.selectArticleOfUserCount(userId);
+    }
+
+    /**
+     * @describe 查询最近一周的热门新闻
+     */
+    public List<Article> selectWeekHotArticle(){
+        return articleMapper.selectWeekHotArticle();
+    }
+
+    /**
+     * @describe 更新文章
+     */
+    public boolean updateArticle(Article article){
+        articleMapper.updateArticle(article.getId(), article.getHeadline(), article.getCategoryId(), article.getGmtModified());
+        articleMapper.updateArticleContent(article.getId(), article.getContent());
+        return true;
     }
 }

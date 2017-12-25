@@ -1,14 +1,21 @@
 package com.lemon213.controller;
 
+import com.lemon213.pojo.Article;
 import com.lemon213.pojo.Editor;
 import com.lemon213.pojo.User;
+import com.lemon213.service.ArticleService;
 import com.lemon213.service.EditorService;
+import com.lemon213.util.DataFormatUtil;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 
 /**
  * @author xiaobu
@@ -18,6 +25,8 @@ import javax.servlet.http.HttpSession;
 public class EditorController {
     @Resource
     private EditorService editorService;
+    @Resource
+    private ArticleService articleService;
 
     /**
      * @describe 转发到文章编写页面
@@ -60,5 +69,50 @@ public class EditorController {
         }
         else
             return "redirect:/article/news_hot";
+    }
+
+    /**
+     * @describe 转向修改文章页面
+     */
+    @RequestMapping("/updateArticleForm")
+    public String updateArticleForm(Integer articleId, HttpSession session, Model model){
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        Article article = articleService.selectArticleById(articleId);
+        if (article == null)
+            return "/404.html"; //文章不存在则返回404
+        if(!sessionUser.getId().equals(article.getUserId())){
+            return "redirect:/send/illegal";
+        }
+        model.addAttribute("article", article);
+        return "/editor/updateArticle";
+    }
+
+    /**
+     * @describe 响应用户更新文章的请求
+     */
+    @RequestMapping(value = "/updateArticle", method = RequestMethod.POST)
+    public String updateArticle(Article article, RedirectAttributes ra){
+        //文章内容或标题为空, 则不给予发表
+        if(article.getContent() == null || article.getContent().equals("") ||
+                article.getHeadline() == null || article.getHeadline().equals("")){
+            ra.addFlashAttribute("errorMessage", "标题和内容不能为空");
+            return "redirect:/updateArticleForm?articleId=" + article.getId();
+        }
+        article.setGmtModified(new Date());
+        articleService.updateArticle(article);
+        return "redirect:/writeSuccess";
+    }
+
+    /**
+     * @describe 响应用户删除文章的请求
+     */
+    @RequestMapping("/deleteArticle")
+    public String deleteArticle(Integer articleId, HttpSession session){
+        if(articleId != null) {
+            articleService.deleteArticleById(articleId);
+        } else {
+            return "/404.html";
+        }
+        return "redirect:/user/myspace";
     }
 }

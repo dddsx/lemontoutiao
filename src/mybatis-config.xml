@@ -16,10 +16,6 @@
         This setting forces generated keys to be used if set to true,
          as some drivers deny compatibility but still work -->
         <setting name="useGeneratedKeys" value="true"/>
-        <!-- 打开延迟加载的开关 -->
-        <setting name="lazyLoadingEnabled" value="true"/>
-        <!-- 将积极加载改为消极加载，即延迟加载 -->
-        <setting name="aggressiveLazyLoading" value="false"/>
     </settings>
 
     <!-- 配置别名, 这样就不需要在配置mapper时加上包名了 -->

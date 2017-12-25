@@ -1,8 +1,10 @@
 package com.lemon213.controller;
 
 import com.lemon213.pojo.Article;
+import com.lemon213.pojo.User;
 import com.lemon213.service.ArticleService;
 import com.lemon213.util.DataFormatUtil;
+import com.lemon213.util.PageInfo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,16 +49,20 @@ public class ArticleDisplayController {
         categoryMap.put("news_story", 12);
         categoryMap.put("news_finance", 13);
         categoryMap.put("essay_joke", 14);
+        categoryMap.put("beautiful_essay", 15);
+        categoryMap.put("news_culture", 16);
+        categoryMap.put("news_search", 17);
+        categoryMap.put("news_cate", 18);
     }
 
     /**
-     * @describe 根据用户请求的URL内的文章类型，展示该板块的文章一览页面
+     * @describe 根据用户请求的URL内的文章类型，展示该板块的所有文章
      * @param category, 用户请求的文章类型
      */
     @RequestMapping(value = "/{category}")
     public String showArticleByCategory(@PathVariable String category, Model model){
         Integer categoryId = categoryMap.get(category);
-        List<Article> articleList = null;
+        List<Article> articleList;
         if(categoryId == null)
             categoryId = 1;
         if(categoryId == 1)
@@ -63,7 +70,6 @@ public class ArticleDisplayController {
         else
             articleList = articleService.selectArticleByCategory(categoryId, 0, PAGE_SIZE);
 
-        System.out.println(articleList.size());
         //格式化日期输出
         for(Article article : articleList){
             article.setShowTime(DataFormatUtil.dateFormat(article.getGmtCreate()));
@@ -98,7 +104,7 @@ public class ArticleDisplayController {
             totalItem = articleService.selectCountByCategory(categoryId); //获取某个类别文章总数
         else
             totalItem = articleService.selectRecomArticleCount(); //获取推荐文章总数
-
+        System.out.println("总条目数：" + totalItem);
         int requestPage = page; //请求第几页
         int lastPage; //最大页数
         if(totalItem % PAGE_SIZE == 0){
@@ -106,9 +112,9 @@ public class ArticleDisplayController {
         } else{
             lastPage = totalItem / PAGE_SIZE + 1;
         }
+        System.out.println(("总页数：" + lastPage));
         if(requestPage > lastPage ){ //请求页数超过了最大页数
             mv.addObject("message", "noMoreNews");
-            Thread.sleep(500);  //模拟用户等待新闻加载
             return mv;
         }
         int startIndex = PAGE_SIZE  * (requestPage - 1); //筛选起始处
@@ -130,7 +136,35 @@ public class ArticleDisplayController {
         }
         mv.addObject("message", "loading");
         mv.addObject("articleList", articleList);
-        Thread.sleep(500);  //模拟用户等待新闻加载
+        return mv;
+    }
+
+    /**
+     * @describe 以ajax方式, 根据用户请求的页数, 加载出更多该用户编写的文章, 如无更多文章, 给出适当提示。
+     * 为了防止文章重复加载, 里面用到了类似分页的技术
+     * @param map，包含了用户请求页数
+     * @return 新的文章以及一些提示性信息
+     */
+    @RequestMapping(value = "/moreArticle", method = RequestMethod.POST)
+    public ModelAndView reloadArticle(@RequestBody Map<String, Object> map, HttpSession session) throws Exception{
+        ModelAndView mv = new ModelAndView();
+        mv.setView(new MappingJackson2JsonView());
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        Integer page = (Integer) map.get("page");
+        int totalItem = articleService.selectArticleOfUserCount(sessionUser.getId());
+
+        System.out.println("总条目数：" + totalItem +" 请求页数：" + page);
+
+        PageInfo pageInfo = new PageInfo(totalItem, PAGE_SIZE, page);
+        pageInfo.Init();
+
+        if(page > pageInfo.getTotalPage()){
+            mv.addObject("message", "noMoreArticle");
+            return mv;
+        }
+        List<Article> articleList = articleService.selectArticleByUserId(sessionUser.getId(), pageInfo.getStartIndex(), pageInfo.getSelectNum());
+        mv.addObject("message", "loading");
+        mv.addObject("articleList", articleList);
         return mv;
     }
 }

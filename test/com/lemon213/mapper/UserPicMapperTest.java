@@ -16,7 +16,7 @@ public class UserPicMapperTest {
 
     @Test
     public void testSaveUserPic(){
-        int startIndex = 17;
+        int startIndex = 12;
         for (int i = startIndex; i < 90; i++) {
             UserPic userPic = new UserPic();
             userPic.setId(i);

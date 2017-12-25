@@ -95,8 +95,8 @@
 </div>
 <script src="${root}/op-plugin/bootstrap-3.3.7-dist/js/jquery-3.2.1.min.js"></script>
 <script src="${root}/op-plugin/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-<script src="js/jquery.validate.js"></script>
-<script src="js/myvalidate.js"></script>
+<script src="${root}/js/jquery.validate.js"></script>
+<script src="${root}/js/myvalidate.js"></script>
 <script>
     //手机验证规则
     jQuery.validator.addMethod("mobile", function (value, element) {

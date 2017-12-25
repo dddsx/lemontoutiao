@@ -76,7 +76,7 @@
     var errorWin = $('#errorWin').popover();
     $(function(){
         $(".backhome").click(function(){
-            window.location.href="${root}";
+            window.location.href="${root}/";
         });
 
         var errorWin = $('#errorWin').popover();

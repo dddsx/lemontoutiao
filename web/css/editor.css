@@ -1,0 +1,18 @@
+body{
+    margin-top: 55px;
+    background-color:#f1f1f1;
+}
+h1{
+    font-family: "微软雅黑", serif;
+    font-weight: normal;
+}
+.container{
+    padding: 0px;
+    width: 840px;
+    margin-bottom: 30px;
+}
+#myEditor{
+    width:740px;
+    height:500px;
+}
+.error{color: #ed4040;}

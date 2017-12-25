@@ -1,28 +1,33 @@
 package com.lemon213.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.lemon213.pojo.Article;
+import com.lemon213.pojo.ImgData;
 import com.lemon213.pojo.User;
+import com.lemon213.service.ArticleService;
 import com.lemon213.service.UserPicService;
 import com.lemon213.service.UserService;
+import com.lemon213.util.DataFormatUtil;
 import com.lemon213.util.FilePathManager;
+import com.lemon213.util.ImgTailor;
+import com.lemon213.util.PageInfo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.io.File;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.UUID;
+import java.io.*;
+import java.util.*;
 
 /**
  * @author xiaobu
@@ -31,13 +36,16 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/user")
 public class UserController {
-
     private static final int DEFAULT_PIC_NUM = 89; //系统默认生成的头像数
+
+    private static final int PAGE_SIZE = 10;
 
     @Resource
     private UserService userService;
     @Resource
     private UserPicService userPicService;
+    @Resource
+    private ArticleService articleService;
 
     /**
      * @describe 根据请求, 转发到登录或者注册页面
@@ -54,15 +62,14 @@ public class UserController {
      */
     @RequestMapping(value = "/loginCheck", method = RequestMethod.POST)
     public ModelAndView loginCheck(ModelAndView mv, @Valid User user, Errors errors, Model model, HttpSession session){
-        Enumeration<String> sessionAttris = session.getAttributeNames();
-        while (sessionAttris.hasMoreElements()){
-            session.removeAttribute(sessionAttris.nextElement());
-        }
+        String currentURL = (String) session.getAttribute("currentURL");
+
         if(errors.hasErrors()){
             model.addAttribute("errorMessage", "用户名和密码要符合要求！");
             mv.setViewName("/user/login");
             return mv;
         }
+
         if((user=userService.selectUserByLogin(user)) == null){
             model.addAttribute("errorMessage", "用户名或密码错误");
             mv.setViewName("/user/login");
@@ -70,9 +77,7 @@ public class UserController {
         } else {
             user.setShowName();
             session.setAttribute("sessionUser", user);
-            String currentURL = (String) session.getAttribute("currentURL");
             if(currentURL != null){
-                session.removeAttribute("currentURL");
                 mv.setViewName("redirect:" + currentURL);
             } else {
                 mv.setViewName("redirect:/article/news_recommend");
@@ -124,53 +129,52 @@ public class UserController {
     public String personalSpace(Model model, HttpSession session){
         User sessionUser = (User)session.getAttribute("sessionUser");
         User user = userService.selectUserMessage(sessionUser.getId());
-        if(user.getBirthday() != null) {
-            java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd");
-            String birthday = df.format(user.getBirthday());
-            model.addAttribute("birthday", birthday);
-        }
-        System.out.println(user);
         model.addAttribute("user_message", user);
+
+        //如果用户是作者，查询用户编写的文章
+        if(sessionUser.getIsEditor()){
+            List<Article> articleList = articleService.selectArticleByUserId(sessionUser.getId(), 0, PAGE_SIZE);
+            model.addAttribute("articleList", articleList);
+        }
         return "/user/myspace";
+    }
+
+    /**
+     * @describe 以ajax方式, 根据用户请求的页数, 加载出更多该用户编写的文章, 如无更多文章, 给出适当提示。
+     * 为了防止文章重复加载, 里面用到了类似分页的技术
+     * @param map，包含了用户请求页数
+     * @return 新的文章以及一些提示性信息
+     */
+    @RequestMapping(value = "/moreArticle", method = RequestMethod.POST)
+    public ModelAndView reloadArticle(@RequestBody Map<String, Object> map, HttpSession session) throws Exception{
+        ModelAndView mv = new ModelAndView();
+        mv.setView(new MappingJackson2JsonView());
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        Integer page = (Integer) map.get("page");
+        int totalItem = articleService.selectArticleOfUserCount(sessionUser.getId());
+
+        System.out.println("总条目数：" + totalItem +" 请求页数：" + page);
+
+        PageInfo pageInfo = new PageInfo(totalItem, PAGE_SIZE, page);
+        pageInfo.Init();
+
+        if(page > pageInfo.getTotalPage()){
+            mv.addObject("message", "noMoreArticle");
+            return mv;
+         }
+        List<Article> articleList = articleService.selectArticleByUserId(sessionUser.getId(), pageInfo.getStartIndex(), pageInfo.getSelectNum());
+        mv.addObject("message", "loading");
+        mv.addObject("articleList", articleList);
+        return mv;
     }
 
     /**
      * @describe 响应用户的个人信息修改请求, 如果修改失败, 给出适当的提示信息
      */
     @RequestMapping(value = "/change_message", method = RequestMethod.POST)
-    public String changeMessage(User user, @RequestParam(value = "headPic", required = false) MultipartFile headPic,
-                                HttpServletRequest request, RedirectAttributes ra, HttpSession session) throws Exception{
+    public String changeMessage(User user, RedirectAttributes ra, HttpSession session) throws Exception{
         User sessionUser = (User)session.getAttribute("sessionUser");
         user.setId(((User)session.getAttribute("sessionUser")).getId());
-        System.out.println(user.getBirthday());
-        //上传用户头像, 如上传失败则不执行后面的用户资料更新操作
-        if(headPic != null && !headPic.isEmpty()){
-            String filename = headPic.getOriginalFilename();
-            String fileExt = filename.substring(filename.lastIndexOf(".") + 1, filename.length());
-            String path = request.getServletContext().getRealPath(FilePathManager.getHeadPicPath());
-            fileExt = fileExt.toLowerCase();
-            if (!"jpg".equals(fileExt) && !"jpeg".equals(fileExt) && !"png".equals(fileExt) && !"bmp".equals(fileExt)
-                    && !"gif".equals(fileExt)) {
-                ra.addFlashAttribute("errorMessage", "上传头像失败, 文件格式不正确！");
-                return "redirect:/user/myspace";
-            } else if(headPic.getInputStream().available() > 2097125){
-                ra.addFlashAttribute("errorMessage", "上传头像失败, 文件太大！");
-                return "redirect:/user/myspace";
-            } else {
-                String generateFilename = UUID.randomUUID().toString() + ".jpg";
-                //System.out.println(path + File.separator + generateFilename);
-                headPic.transferTo(new File(path + File.separator + generateFilename));
-                Integer headPicId = userPicService.saveUserHeadPic(generateFilename);
-                boolean result = userService.updateUserHeadPic(sessionUser.getId(), headPicId);
-                if(result){
-                    sessionUser.setPicName(generateFilename);
-                } else {
-                    ra.addFlashAttribute("errorMessage", "上传头像失败！");
-                    return "redirect:/user/myspace";
-                }
-            }
-        }
-
         if(user.getNickname() == null || user.getNickname().equals("")){
             ra.addFlashAttribute("errorMessage", "昵称不能为空！");
         }
@@ -182,5 +186,41 @@ public class UserController {
             session.setAttribute("sessionUser", sessionUser);
         }
         return "redirect:/user/myspace";
+    }
+
+    @RequestMapping(value = "/imgUpload", method = RequestMethod.POST)
+    public void reloadArticle(String avatar_data, HttpServletResponse response, HttpServletRequest request,
+                              @RequestParam(value = "avatar_file") MultipartFile avatar_file) throws Exception {
+        User sessionUser = (User) request.getSession().getAttribute("sessionUser");
+        PrintWriter out = response.getWriter();
+        if (avatar_file != null && !avatar_file.isEmpty()) {
+            String filename = avatar_file.getOriginalFilename();
+            String fileExt = filename.substring(filename.lastIndexOf(".") + 1, filename.length());
+            fileExt = fileExt.toLowerCase();
+            if (!"jpg".equals(fileExt) && !"jpeg".equals(fileExt) && !"png".equals(fileExt) && !"bmp".equals(fileExt)
+                    && !"gif".equals(fileExt)) {
+                out.print("文件格式不正确");
+            } else if (avatar_file.getInputStream().available() > 2097125) { //2M
+                out.print("文件过大");
+            } else {
+                ImgData imgData = JSON.parseObject(avatar_data, ImgData.class);
+                if(imgData.getX() < 0|| imgData.getY() < 0){
+                    out.print("截取方式错误");
+                    return;
+                }
+                String generateFilename = UUID.randomUUID().toString() + "." + fileExt;
+                String headPicPath = request.getServletContext().getRealPath(FilePathManager.getHeadPicPath());
+                OutputStream imgOutStream = new FileOutputStream(new File(headPicPath + File.separator + generateFilename));
+                ImgTailor.cutImage(avatar_file.getInputStream(), imgOutStream, imgData, fileExt, fileExt);
+                Integer headPicId = userPicService.saveUserHeadPic(generateFilename);
+                userService.updateUserHeadPic(sessionUser.getId(), headPicId);
+                sessionUser.setPicName(generateFilename);
+                JSONObject json = new JSONObject();
+                json.put("result", "../" + FilePathManager.getHeadPicPath() + "/"  + generateFilename);
+                out.print(json.toJSONString());
+            }
+        } else {
+            out.print("文件不能为空");
+        }
     }
 }

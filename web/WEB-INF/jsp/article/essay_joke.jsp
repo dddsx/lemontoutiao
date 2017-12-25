@@ -35,6 +35,7 @@
         .joke-content{
             word-wrap: break-word;
             word-break: break-all;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -42,40 +43,18 @@
 <!-- 动态引入导航条 -->
 <jsp:include page="../lib/navbar.jsp"/>
 
+<input id="category" type="hidden" value="${requestScope.category}">
+
 <!-- 主内容 -->
 <div class="container">
     <div class="row">
         <div class="col-xs-2">
-            <div class="left-nav text-center">
-                <ul class="nav nav-pills nav-stacked">
-                    <li role="presentation"><a category="1" class="point" href="${root}/article/news_recommend"><span class="list">推荐</span></a></li>
-                    <li role="presentation"><a category="2" class="point" href="${root}/article/news_hot"><span class="list">热点</span></a></li>
-                    <li role="presentation"><a category="3" class="point" href="${root}/article/news_tech"><span class="list">科技</span></a></li>
-                    <li role="presentation"><a category="4" class="point" href="${root}/article/news_funny"><span class="list">搞笑</span></a></li>
-                    <li role="presentation"><a category="5" class="point" href="${root}/article/news_entertainment"><span class="list">娱乐</span></a></li>
-                    <li role="presentation"><a category="6" class="point" href="${root}/article/news_game"><span class="list">游戏</span></a></li>
-                    <li role="presentation"><a category="7" class="point" href="${root}/article/news_sports"><span class="list">体育</span></a></li>
-                    <li role="presentation"><a category="8" class="point" href="${root}/article/news_cartoon"><span class="list">动漫</span></a></li>
-                    <li role="presentation"><a category="9" class="point" href="${root}/article/news_movie"><span class="list">电影</span></a></li>
-                   <li role="presentation"><a category="10" class="point"  href="${root}/article/news_automobile"><span class="list">汽车</span></a></li>
-                    <li role="presentation" class="dropup active" type="0">
-                        <a href="#"  id="more" data-toggle="dropdown" category="0"
-                           aria-haspopup="true" aria-expanded="false"><span class="chose">更多</span></a>
-                        <ul class="dropdown-menu nav nav-pills nav-stacked" aria-labelledby="more" style="min-width:100%;">
-                            <li role="presentation"><a category="11" href="${root}/article/news_military" class="text-center point"><span class="list" style="font-size: 18px">军事</span></a></li>
-                            <li role="presentation"><a category="12" href="${root}/article/news_story" class="text-center point"><span class="list" style="font-size: 18px">故事</span></a></li>
-                            <li role="presentation"><a category="13" href="${root}/article/news_finance" class="text-center point"><span class="list" style="font-size: 18px">财经</span></a></li>
-                            <li role="presentation" class="active"><a category="14" href="${root}/article/essay_joke" class="text-center"><span class="chose" style="font-size: 18px">段子</span></a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+            <%@include file="./left_nav.jsp"%>
         </div>
         <div class="col-xs-6">
             <div class="news">
-                <input id="category" type="hidden" value="${requestScope.category}">
                 <div>
-                    <ul class="joke-container">
+                    <ul id="joke-list" class="joke-container">
                         <c:forEach var="article" items="${requestScope.articleList}">
                             <li class="joke-list" article-id="${article.id}">
                                 <div class="author-info">
@@ -94,10 +73,14 @@
                 </div>
                 <c:choose>
                     <c:when test="${!empty requestScope.articleList}">
-                        <a class="reload" role="button">我还想要......</a>
+                        <div class="text-center" style="background-color:#f1f1f1;margin-bottom: 30px">
+                            <a class="reload" role="button" style="color: #5e5e5e;">加载更多</a>
+                        </div>
                     </c:when>
                     <c:otherwise>
-                        <div class="text-center"><a href="${root}/write" class="h3" role="button">少侠妙笔生花, 发表一些文章吧</a></div>
+                        <div class="text-center">
+                            <a href="https://www.toutiao.com" class="h3">破网站什么都没有，还是去看今日头条好了</a>
+                        </div>
                     </c:otherwise>
                 </c:choose>
             </div>
@@ -110,8 +93,84 @@
 </div>
 <script src="${root}/op-plugin/bootstrap-3.3.7-dist/js/jquery-3.2.1.min.js"></script>
 <script src="${root}/op-plugin/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-<script src="${root}/js/NewsCategory.js"></script>
 <script>
+    $(function(){
+        addLeftNavStyle();
+        var page = 1;
+        var category = $("#category").val();
+        $(".reload").click(function () {
+            $(this).text("请稍后...");
+            page++;
+            console.log("向后台请求第:" + page +"页");
+            loadNews(category, page.toString());
+        })
+    });
+
+    function addLeftNavStyle() {
+        var category =$("#category").val();
+        if(category > 10) {
+            var more = $("a[category=0]");
+            more.removeClass("point");
+            more.parent().addClass("active");
+            more.children().removeClass("list").addClass("chose");
+        }
+        var chose = $("a[category=" + category + "]");
+        chose.parent().addClass("active");
+        chose.children().removeClass("list").addClass("chose");
+        chose.removeClass("point");
+
+        var point = $(".point");
+        point.bind("mouseover",function () {
+            $(this).parent().addClass("active");
+            $(this).children().removeClass("list").addClass("chose");
+        });
+        point.bind("mouseout",function () {
+            $(this).parent().removeClass("active");
+            $(this).children().removeClass("chose").addClass("list");
+        });
+    }
+
+    function loadNews(category, page) {
+        $.ajax({
+            type: "post",
+            url: "${root}/article/reloadNews",
+            dataType: 'json',
+            contentType: "application/json",
+            data: JSON.stringify({
+                category : category,
+                page : page
+            }),
+            success:function (data) {
+                console.log(JSON.stringify(data));
+                if(data.message  === "loading") {
+                    var $joke_list = $("#joke-list");
+                    $.each(data.articleList, function (i, item) {
+                        $joke_list.append(
+                            '<li class="joke-list" article-id=' + item.id + '>' +
+                            '<div class="author-info">' +
+                            '<img class="author-img img-circle" src=' + "${root}/${applicationScope.headPicPath}/" + item.user.picName + '>&nbsp;&nbsp;<span class="author-name">' + item.user.nickname + '</span>' +
+                            '</div>' +
+                            '<div class="joke-content">' + item.content + '</div>' +
+                            '<div>' +
+                            '<a type="button" class="btn btn-default btn-lg praise-btn" onclick="praise(' + item.id + ',' + item.user.editor.id + ')">' +
+                            '<span class="glyphicon glyphicon glyphicon-thumbs-up praise_num">' + item.praiseNum + '</span>' +
+                            '</a>' +
+                            '<span class="prompt" style="color: #ed4040;font-size: 17px"></span>' +
+                            '</div>' +
+                            '</li>'
+                        )
+                    });
+                    $(".reload").text("加载更多");
+                } else if(data.message === "noMoreNews"){
+                    $(".reload").text("暂时没有了").unbind();
+                }
+            },
+            error:function () {
+                alert("服务器异常，请联系开发人员");
+            }
+        });
+    }
+
     function praise(articleId, editorId) {
         $.ajax({
             type: "post",

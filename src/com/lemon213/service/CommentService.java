@@ -8,4 +8,6 @@ public interface CommentService {
     boolean submitComment(Comment comment);
 
     List<Comment> selectCommentsByArticleId(Integer id);
+
+    boolean addPraiseNum(Integer commentId);
 }

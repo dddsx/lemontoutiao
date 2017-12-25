@@ -42,4 +42,13 @@ public class CommentServiceImpl implements CommentService{
     public List<Comment> selectCommentsByArticleId(Integer id) {
         return commentMapper.selectCommentsByArticleId(id);
     }
+
+    /**
+     * @describe 使该评论点赞数加1
+     * @param commentId, 评论id
+     * @return 成功则返回true
+     */
+    public boolean addPraiseNum(Integer commentId){
+        return commentMapper.addPraiseNum(commentId) == 1;
+    }
 }

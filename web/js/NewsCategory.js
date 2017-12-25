@@ -1,9 +1,6 @@
-var rootDir;
 $(function(){
     addLeftNavStyle();
     var page = 1;
-    rootDir = getRootDir();
-    console.log("root dir is:" + rootDir);
     var category = $("#category").val();
     $(".reload").click(function () {
         $(this).text("请稍后...");
@@ -40,7 +37,7 @@ function addLeftNavStyle() {
 function loadNews(category, page) {
     $.ajax({
         type: "post",
-        url: rootDir + "/article/reloadNews",
+        url: "/article/reloadNews",
         dataType: 'json',
         contentType: "application/json",
         data: JSON.stringify({
@@ -53,29 +50,20 @@ function loadNews(category, page) {
                 var $newsTable = $("#news-table").children();
                 $.each(data.articleList, function (i, item) {
                     $newsTable.append('<tr class="news-list"><td><div class="picture">' +
-                        '<a href=' + rootDir + '/view/' + item.id + ' target="_blank"><img class="img-rounded cover-img" src=' + item.picture +'></a>'+
+                        '<a href=' + '/view/' + item.id + ' target="_blank"><img class="cover-img" src=' + '/img/cover/' + item.cover +'></a>'+
                         '</div></td><td>' +
-                        '<div class="headline"><a href=' + rootDir + '/view/' + item.id + ' target="_blank"><br><p>'+ item.headline+ '</p></a>' +
-                        '</div> <div class="userId text-right">' + item.user.nickname + ' · ' + item.user.commentNum + '评论' +
+                        '<div class="headline"><a class="headline-font" href=' + '/view/' + item.id + ' target="_blank"><p>'+ item.headline+ '</p></a>' +
+                        '</div> <div class="other-info text-right">' + item.user.nickname + ' · ' + item.user.commentNum + '评论' +
                         ' · ' + item.showTime + '</div> </td></tr>'
                     )
                 });
-                $(".reload").text("我还想要......");
+                $(".reload").text("加载更多");
             } else if(data.message === "noMoreNews"){
-                $(".reload").text("来不了了......").unbind();
+                $(".reload").text("暂时没有了").unbind();
             }
         },
         error:function () {
             alert("服务器异常，请联系开发人员");
         }
     });
-}
-
-function getRootDir(){
-    var strFullPath=window.document.location.href;
-    var strPath=window.document.location.pathname;
-    var pos=strFullPath.indexOf(strPath);
-    var prePath=strFullPath.substring(0,pos);
-    var postPath=strPath.substring(0,strPath.substr(1).indexOf('/')+1);
-    return(prePath+postPath);
 }

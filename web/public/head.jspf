@@ -3,5 +3,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set value="${pageContext.request.contextPath}" var="root"/>
+<c:set value="${applicationScope.headPicPath}" var="headPicPath" />
+<c:set value="${applicationScope.coverPath}" var="coverPath" />
 <title>柠檬头条</title>
 <link href="${root}/op-plugin/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
