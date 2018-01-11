@@ -2,8 +2,6 @@ package com.lemon213.util;
 
 
 import com.lemon213.pojo.ImgData;
-import com.sun.scenario.effect.ImageData;
-import sun.applet.Main;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
@@ -11,7 +9,9 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Iterator;
 
 public class ImgTailor {

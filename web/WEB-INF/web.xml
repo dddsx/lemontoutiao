@@ -77,6 +77,8 @@
     <url-pattern>/user/myspace</url-pattern>
     <url-pattern>/user/change_message</url-pattern>
     <url-pattern>/updateArticleForm</url-pattern>
+    <url-pattern>/user/security</url-pattern>
+    <url-pattern>/user/changePwd</url-pattern>
   </filter-mapping>
   <!-- 管理员登录过滤器 -->
   <filter>

@@ -9,7 +9,7 @@ import java.io.IOException;
  * @author xiaobu
  * @describe 用户登录过滤器, 拦截一些以游客身份进行的非法操作
  */
-public class LoginFilter implements Filter{
+public class LoginFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
 
     }

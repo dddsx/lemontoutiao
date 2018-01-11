@@ -44,6 +44,7 @@
         &nbsp;<a id="errorWin" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="${requestScope.errorMessage}"></a>
     </div>
     <form id="registerForm" name="registerForm" class="form-horizontal" action="registerCheck" method="post">
+        <input id="md5_pwd" name="md5_pwd" type="hidden" value="">
         <div class="form-group">
             <label class="col-xs-3 control-label" for="username">用户名</label>
             <div class="col-xs-8">
@@ -61,7 +62,7 @@
         <div class="form-group">
             <label class="col-xs-3 control-label" for="re_password">密码确认</label>
             <div class="col-xs-8">
-                <input class="form-control" id="re_password" name="re_password" type="password" placeholder="" required data-msg-required="请进行密码确认" equalTo="#password">
+                <input class="form-control" id="re_password" name="re_password" type="password" maxlength="16" placeholder="" required data-msg-required="请进行密码确认" equalTo="#password">
             </div>
             <div class="col-xs-1"></div>
         </div>
@@ -104,6 +105,7 @@
 <script src="${root}/js/jquery.validate.js"></script>
 <script src="${root}/js/myvalidate.js"></script>
 <script src="${root}/js/jquery.idcode.js"></script>
+<script src="${root}/js/jquery.md5.js"></script>
 <script>
     $(function(){
         $(".backhome").click(function(){
@@ -118,8 +120,7 @@
             errorWin.popover('hide');
         }
     }); // ";"不要漏掉
-</script>
-<script>
+
     $.idcode.setCode();
 
     $("#submit").click(function (){
@@ -128,6 +129,11 @@
             alert("验证码错误!");
             return false;
         }
+        var $password = $("#password");
+        var pwd = $password.val();
+        var md5_pwd = $.md5(pwd);
+        $("#md5_pwd").val(md5_pwd);
+        return true;
     });
 </script>
 </body>

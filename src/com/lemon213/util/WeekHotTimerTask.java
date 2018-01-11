@@ -2,7 +2,7 @@ package com.lemon213.util;
 
 import com.lemon213.pojo.Article;
 import com.lemon213.service.ArticleService;
-import javax.annotation.Resource;
+
 import javax.servlet.ServletContext;
 import java.util.List;
 import java.util.TimerTask;

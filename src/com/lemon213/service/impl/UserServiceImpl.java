@@ -67,4 +67,16 @@ public class UserServiceImpl implements UserService{
     public boolean updateUserHeadPic(Integer userId, Integer headPicId){
         return userMapper.updateUserHeadPic(userId, headPicId)==1;
     }
+
+    @Override
+    public boolean updateUserPwd(String username, String old_pwd, String new_pwd) {
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(old_pwd);
+        if(userMapper.selectUserByLogin(user) != null){
+            userMapper.updateUserPwd(username, new_pwd);
+            return true;
+        }
+        return false;
+    }
 }

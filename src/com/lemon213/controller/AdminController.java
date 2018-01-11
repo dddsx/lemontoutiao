@@ -5,6 +5,7 @@ import com.lemon213.pojo.Article;
 import com.lemon213.service.AdminService;
 import com.lemon213.service.ArticleService;
 import com.lemon213.util.DataFormatUtil;
+import com.lemon213.util.MD5Generater;
 import com.lemon213.util.PageInfo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,7 +52,10 @@ public class AdminController {
             model.addAttribute("errorMessage", "用户名和密码不能为空");
             return "/admin/login";
         }
+
+        admin.setPassword(MD5Generater.getMD5(admin.getPassword()));
         admin = adminService.selectAdminByLogin(admin);
+
         if(admin == null){
             model.addAttribute("errorMessage", "用户名或密码错误");
             return "/admin/login";

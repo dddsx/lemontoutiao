@@ -40,4 +40,7 @@ public interface UserMapper {
 
     //更新用户的头像
     int updateUserHeadPic(int userId, int headPicId);
+
+    //更改用户密码
+    int updateUserPwd(String username, String new_pwd);
 }

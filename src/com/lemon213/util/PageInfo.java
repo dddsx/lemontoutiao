@@ -1,8 +1,5 @@
 package com.lemon213.util;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import java.io.Serializable;
 import java.util.List;
 

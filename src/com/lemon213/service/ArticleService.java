@@ -3,7 +3,6 @@ package com.lemon213.service;
 import com.lemon213.pojo.Article;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ArticleService {
     int selectCountByCategory(int categoryId);

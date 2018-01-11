@@ -5,7 +5,6 @@ import com.lemon213.pojo.Editor;
 import com.lemon213.pojo.User;
 import com.lemon213.service.ArticleService;
 import com.lemon213.service.EditorService;
-import com.lemon213.util.DataFormatUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
 

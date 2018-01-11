@@ -8,9 +8,9 @@ import com.lemon213.pojo.User;
 import com.lemon213.service.ArticleService;
 import com.lemon213.service.UserPicService;
 import com.lemon213.service.UserService;
-import com.lemon213.util.DataFormatUtil;
 import com.lemon213.util.FilePathManager;
 import com.lemon213.util.ImgTailor;
+import com.lemon213.util.MD5Generater;
 import com.lemon213.util.PageInfo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +26,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.*;
 
 /**
@@ -70,6 +73,8 @@ public class UserController {
             return mv;
         }
 
+        user.setPassword(MD5Generater.getMD5(user.getPassword()));
+        System.out.println(user.getPassword());
         if((user=userService.selectUserByLogin(user)) == null){
             model.addAttribute("errorMessage", "用户名或密码错误");
             mv.setViewName("/user/login");
@@ -91,12 +96,13 @@ public class UserController {
      * @return 返回注册成功或失败页面, 并给用户适当的提示信息
      */
     @RequestMapping(value = "/registerCheck", method = RequestMethod.POST)
-    public String registerCheck(@Valid User user, @RequestParam("re_password") String re_password, Errors errors, Model model){
+    public String registerCheck(@Valid User user, @RequestParam("re_password") String re_password, @RequestParam("md5_pwd") String md5_pwd, Errors errors, HttpSession session, Model model){
         if(errors.hasErrors() || !user.getPassword().equals(re_password) || user.getEmail() == null){
             model.addAttribute("errorMessage", "请按照要求填写！");
             return "/user/register";
         }
         user.setNickname(user.getUsername());
+        user.setPassword(md5_pwd);
         user.setGmtCreate(new Date());
         user.setGmtModified(new Date());
         int picture = 1 + (int) (Math.random()*DEFAULT_PIC_NUM); //为用户随机挑选头像
@@ -105,6 +111,9 @@ public class UserController {
             model.addAttribute("errorMessage", "用户名已存在, 换个试试");
             return "/user/register";
         } else{
+            user = userService.selectUserByLogin(user);
+            user.setShowName();
+            session.setAttribute("sessionUser", user);
             return "/user/regSuccess";
         }
     }
@@ -222,5 +231,21 @@ public class UserController {
         } else {
             out.print("文件不能为空");
         }
+    }
+
+    @RequestMapping(value = "/security", method = RequestMethod.GET)
+    public String security(){
+        return "/user/security";
+    }
+
+    @RequestMapping(value = "/changePwd", method = RequestMethod.POST)
+    public String changePwd(String old_pwd, String new_pwd, HttpSession session, Model model){
+        User sessionUser = (User)session.getAttribute("sessionUser");
+        boolean result = userService.updateUserPwd(sessionUser.getUsername(), MD5Generater.getMD5(old_pwd), MD5Generater.getMD5(new_pwd));
+        if(result)
+            model.addAttribute("message", "修改成功！");
+        else
+            model.addAttribute("message", "旧密码输入错误！");
+        return "/user/security";
     }
 }

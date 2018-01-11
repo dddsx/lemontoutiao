@@ -7,10 +7,12 @@ import com.lemon213.util.WeekHotTimerTask;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 
 public class InitDataListener implements ServletContextListener {
@@ -19,6 +21,10 @@ public class InitDataListener implements ServletContextListener {
         ServletContext servletContext = event.getServletContext();
 
         ArticleService articleService = (ArticleService) applicationContext.getBean("articleService");
+
+        //用户编写文章时间间隔记录
+        Map<String, Date> writeTimeMap = new HashMap<>();
+        servletContext.setAttribute("writeTimeMap", writeTimeMap);
 
         //设置全局路径信息
         servletContext.setAttribute("headPicPath", FilePathManager.getHeadPicPath());

@@ -11,7 +11,7 @@ import java.io.IOException;
  * @author xiaobu
  * @describe 文章编写过滤器, 拦截一些非小编用户的文章编写请求
  */
-public class EditorApproveFilter implements Filter{
+public class EditorApproveFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
 
     }

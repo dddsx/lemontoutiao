@@ -27,11 +27,9 @@
                     <li>
                         <a class="dropdown-toggle username" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">${sessionScope.sessionUser.showName}<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a style="color:#555555" href="#" onclick="{alert('敬请期待!')}">我的收藏</a></li>
-                            <li><a style="color:#555555" href="#" onclick="{alert('敬请期待!')}">我的关注</a></li>
-                            <li><a style="color:#555555" href="#" onclick="{alert('敬请期待!')}">我的粉丝</a></li>
-                            <li role="separator" class="divider"></li>
                             <li><a style="color:#555555" href="${root}/user/myspace">个人空间</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a style="color:#555555" href="${root}/user/security">账号安全</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a style="color:#555555" href="${root}/user/logout">退出</a></li>
                         </ul>

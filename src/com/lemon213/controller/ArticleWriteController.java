@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -53,6 +54,19 @@ public class ArticleWriteController {
         if(user == null){
             return "redirect:/send/timeout";
         }
+
+        Date now = new Date();
+
+        //判断用户是否发表文章过于频繁，两次间隔应该大于5分钟
+        Map<String, Date> writeTimeMap = (Map<String, Date>)request.getServletContext().getAttribute("writeTimeMap");
+        String sessionId = session.getId();
+        Date lastWriteTime = writeTimeMap.get(sessionId);
+        if(lastWriteTime != null){
+            if((now.getTime() - lastWriteTime.getTime())/(1000*60) < 5){
+                return "/editor/fail";
+            }
+        }
+
         //文章标题、封面或内容为空, 则不给予发表
         if(article.getContent() == null || article.getContent().equals("") ||
                 article.getHeadline() == null || article.getHeadline().equals("") ||
@@ -66,18 +80,18 @@ public class ArticleWriteController {
             return "redirect:/write";
         }
         article.setUserId(user.getId());
-        Date now = new Date();
         article.setGmtCreate(now);
         article.setGmtModified(now);
         articleService.saveArticle(article);
-        return "redirect:/writeSuccess";
+        writeTimeMap.put(sessionId, now);
+        return "redirect:/success";
     }
 
     /**
      * @describe 转向发表成功页面
      */
-    @RequestMapping(value = "/writeSuccess")
+    @RequestMapping(value = "/success")
     public String writeSuccess(){
-        return "/editor/writeSuccess";
+        return "editor/success";
     }
 }

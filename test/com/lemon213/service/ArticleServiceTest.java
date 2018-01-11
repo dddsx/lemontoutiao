@@ -1,6 +1,5 @@
 package com.lemon213.service;
 
-import com.lemon213.mapper.ArticleMapper;
 import com.lemon213.pojo.Article;
 import org.junit.Test;
 import org.junit.runner.RunWith;
