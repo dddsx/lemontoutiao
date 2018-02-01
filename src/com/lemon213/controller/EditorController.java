@@ -98,7 +98,7 @@ public class EditorController {
         }
         article.setGmtModified(new Date());
         articleService.updateArticle(article);
-        return "redirect:/writeSuccess";
+        return "redirect:/success";
     }
 
     /**

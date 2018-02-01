@@ -12,6 +12,8 @@ import com.lemon213.util.FilePathManager;
 import com.lemon213.util.ImgTailor;
 import com.lemon213.util.MD5Generater;
 import com.lemon213.util.PageInfo;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -39,6 +41,8 @@ import java.util.*;
 @Controller
 @RequestMapping("/user")
 public class UserController {
+    private static final Log log = LogFactory.getLog("webInfo");
+
     private static final int DEFAULT_PIC_NUM = 89; //系统默认生成的头像数
 
     private static final int PAGE_SIZE = 10;
@@ -87,6 +91,7 @@ public class UserController {
             } else {
                 mv.setViewName("redirect:/article/news_recommend");
             }
+            log.info("用户" + user.getUsername() + "登录了柠檬头条");
             return mv;
         }
     }
@@ -111,6 +116,7 @@ public class UserController {
             model.addAttribute("errorMessage", "用户名已存在, 换个试试");
             return "/user/register";
         } else{
+            log.info("用户" + user.getUsername() + "注册成为柠檬头条正式用户");
             user = userService.selectUserByLogin(user);
             user.setShowName();
             session.setAttribute("sessionUser", user);
@@ -221,6 +227,7 @@ public class UserController {
                 String headPicPath = request.getServletContext().getRealPath(FilePathManager.getHeadPicPath());
                 OutputStream imgOutStream = new FileOutputStream(new File(headPicPath + File.separator + generateFilename));
                 ImgTailor.cutImage(avatar_file.getInputStream(), imgOutStream, imgData, fileExt, fileExt);
+                log.info("用户" + sessionUser.getUsername() + "上传了新头像 \"" + generateFilename + "\"");
                 Integer headPicId = userPicService.saveUserHeadPic(generateFilename);
                 userService.updateUserHeadPic(sessionUser.getId(), headPicId);
                 sessionUser.setPicName(generateFilename);

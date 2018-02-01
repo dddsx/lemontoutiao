@@ -87,6 +87,7 @@
   </filter>
   <filter-mapping>
     <filter-name>AdminLogin</filter-name>
+    <url-pattern>/admin/logout</url-pattern>
     <url-pattern>/admin/articleList</url-pattern>
     <url-pattern>/admin/articleCheck</url-pattern>
     <url-pattern>/admin/articleDelete</url-pattern>

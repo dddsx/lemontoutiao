@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
          pageEncoding="utf-8" %>
-<%@ page import="com.baidu.ueditor.um.Uploader" %>
+<%@ page import="com.lemon213.util.Uploader" %>
 
 <%
     request.setCharacterEncoding("utf-8");

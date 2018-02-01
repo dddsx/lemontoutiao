@@ -5,6 +5,8 @@ import com.lemon213.pojo.User;
 import com.lemon213.service.ArticleService;
 import com.lemon213.util.FilePathManager;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +29,8 @@ import java.util.UUID;
  */
 @Controller
 public class ArticleWriteController {
+    private static final Log log = LogFactory.getLog("webInfo");
+
     @Resource
     private ArticleService articleService;
 
@@ -40,8 +44,8 @@ public class ArticleWriteController {
         byte[] bytes = base64Decoder.decodeBuffer(dataURL);
         String fileName = UUID.randomUUID().toString() + "." + "jpg";
         String path = request.getServletContext().getRealPath(FilePathManager.getCoverPath());
-        //System.out.println(path);
         FileUtils.writeByteArrayToFile(new File(path, fileName), bytes);
+        log.info("封面图 \"" + fileName + "\" 被上传");
         response.getWriter().print(fileName);
     }
 
@@ -57,12 +61,12 @@ public class ArticleWriteController {
 
         Date now = new Date();
 
-        //判断用户是否发表文章过于频繁，两次间隔应该大于5分钟
+        //判断用户是否发表文章过于频繁，两次间隔应该大于3分钟
         Map<String, Date> writeTimeMap = (Map<String, Date>)request.getServletContext().getAttribute("writeTimeMap");
         String sessionId = session.getId();
         Date lastWriteTime = writeTimeMap.get(sessionId);
         if(lastWriteTime != null){
-            if((now.getTime() - lastWriteTime.getTime())/(1000*60) < 5){
+            if((now.getTime() - lastWriteTime.getTime())/(1000*60) < 3){  //小于号右边为时间间隔分钟数
                 return "/editor/fail";
             }
         }
@@ -84,6 +88,7 @@ public class ArticleWriteController {
         article.setGmtModified(now);
         articleService.saveArticle(article);
         writeTimeMap.put(sessionId, now);
+        log.info("作者" + user.getUsername() + "发表主题《" + article.getHeadline() + "》");
         return "redirect:/success";
     }
 

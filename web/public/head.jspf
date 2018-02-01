@@ -7,3 +7,4 @@
 <c:set value="${applicationScope.coverPath}" var="coverPath" />
 <title>柠檬头条</title>
 <link href="${root}/op-plugin/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="SHORTCUT ICON" href="${root}/img/materia/lemon.ico">

@@ -8,6 +8,8 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import sun.misc.BASE64Decoder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +22,7 @@ import java.util.*;
  *
  */
 public class Uploader {
+	private static final Log log = LogFactory.getLog("webInfo");
 	// 输出文件地址
 	private String url = "";
 	// 上传文件名
@@ -90,6 +93,7 @@ public class Uploader {
 					FileOutputStream out = new FileOutputStream( file );
 					BufferedOutputStream output = new BufferedOutputStream(out);
 					Streams.copy(in, output, true);
+					log.info("文章图片 \"" + url + "\" 被上传");
 					this.state=this.errorInfo.get("SUCCESS");
 					this.size = file.length();
 					//UE中只会处理单张上传，完成后即退出
@@ -107,8 +111,7 @@ public class Uploader {
                         result.append((char)reader.read());  
                     }
                     this.title = new String(result.toString().getBytes(),"utf-8");
-                    reader.close();  
-                    
+                    reader.close();
 				}
 			}
 		} catch (SizeLimitExceededException e) {
