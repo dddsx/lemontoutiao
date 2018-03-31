@@ -9,9 +9,7 @@
         <webroots>
           <root url="file://$MODULE_DIR$/web" relative="/" />
         </webroots>
-        <sourceRoots>
-          <root url="file://$MODULE_DIR$/src" />
-        </sourceRoots>
+        <sourceRoots />
       </configuration>
     </facet>
     <facet type="Spring" name="Spring">
@@ -19,10 +17,11 @@
     </facet>
   </component>
   <component name="NewModuleRootManager">
-    <output url="file://$MODULE_DIR$/web/WEB-INF/classes" />
-    <output-test url="file://$MODULE_DIR$/web/WEB-INF/test-classes" />
+    <output url="file://$MODULE_DIR$/../ningmengtoutiao/web/WEB-INF/classes" />
+    <output-test url="file://$MODULE_DIR$/../ningmengtoutiao/web/WEB-INF/test-classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/design/前端设计/umeditor1.2.3-utf8-jsp/jsp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
     </content>
@@ -32,11 +31,11 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="file://$MODULE_DIR$/web/WEB-INF/lib" />
+          <root url="file://$MODULE_DIR$/../ningmengtoutiao/web/WEB-INF/lib" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
-        <jarDirectory url="file://$MODULE_DIR$/web/WEB-INF/lib" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/../ningmengtoutiao/web/WEB-INF/lib" recursive="false" />
       </library>
     </orderEntry>
   </component>
